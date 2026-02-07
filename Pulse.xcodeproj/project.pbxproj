@@ -1,0 +1,756 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA000001 /* PulseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000001 /* PulseApp.swift */; };
+		AA000002 /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000002 /* Exercise.swift */; };
+		AA000003 /* Routine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000003 /* Routine.swift */; };
+		AA000004 /* WorkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000004 /* WorkSession.swift */; };
+		AA000005 /* ExerciseLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000005 /* ExerciseLog.swift */; };
+		AA000006 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000006 /* AppSettings.swift */; };
+		AA000007 /* TimerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000007 /* TimerService.swift */; };
+		AA000008 /* ExerciseSessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000008 /* ExerciseSessionService.swift */; };
+		AA000009 /* AudioGuidanceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000009 /* AudioGuidanceService.swift */; };
+		AA000010 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000010 /* NotificationService.swift */; };
+		AA000011 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000011 /* HealthKitService.swift */; };
+		AA000012 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000012 /* PersistenceService.swift */; };
+		AA000013 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000013 /* MenuBarContentView.swift */; };
+		AA000014 /* TimerDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000014 /* TimerDisplayView.swift */; };
+		AA000015 /* QuickActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000015 /* QuickActionsView.swift */; };
+		AA000016 /* ExerciseSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000016 /* ExerciseSessionView.swift */; };
+		AA000017 /* ExerciseStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000017 /* ExerciseStepView.swift */; };
+		AA000018 /* ExerciseCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000018 /* ExerciseCompleteView.swift */; };
+		AA000019 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000019 /* DashboardView.swift */; };
+		AA000020 /* DailyStatsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020 /* DailyStatsChart.swift */; };
+		AA000021 /* WeeklyStatsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000021 /* WeeklyStatsChart.swift */; };
+		AA000022 /* StreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000022 /* StreakView.swift */; };
+		AA000023 /* ExerciseHistoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000023 /* ExerciseHistoryList.swift */; };
+		AA000024 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000024 /* SettingsView.swift */; };
+		AA000025 /* GeneralSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000025 /* GeneralSettingsTab.swift */; };
+		AA000026 /* RoutineSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000026 /* RoutineSettingsTab.swift */; };
+		AA000027 /* HealthSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000027 /* HealthSettingsTab.swift */; };
+		AA000028 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000028 /* CircularProgressView.swift */; };
+		AA000029 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000029 /* Constants.swift */; };
+		AA000030 /* TimeFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000030 /* TimeFormatting.swift */; };
+		AA000031 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB000031 /* Assets.xcassets */; };
+		AA000032 /* DefaultRoutines.json in Resources */ = {isa = PBXBuildFile; fileRef = AB000032 /* DefaultRoutines.json */; };
+		AA000033 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000035 /* DesignSystem.swift */; };
+		AA000034 /* IconGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000036 /* IconGenerator.swift */; };
+		AA000035 /* ScreenActivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000037 /* ScreenActivityService.swift */; };
+		BB000001 /* PulseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000038 /* PulseApp.swift */; };
+		BB000002 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000039 /* HomeView.swift */; };
+		BB000003 /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000002 /* Exercise.swift */; };
+		BB000004 /* Routine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000003 /* Routine.swift */; };
+		BB000005 /* WorkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000004 /* WorkSession.swift */; };
+		BB000006 /* ExerciseLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000005 /* ExerciseLog.swift */; };
+		BB000007 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000006 /* AppSettings.swift */; };
+		BB000008 /* TimerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000007 /* TimerService.swift */; };
+		BB000009 /* ExerciseSessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000008 /* ExerciseSessionService.swift */; };
+		BB000010 /* AudioGuidanceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000009 /* AudioGuidanceService.swift */; };
+		BB000011 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000010 /* NotificationService.swift */; };
+		BB000012 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000011 /* HealthKitService.swift */; };
+		BB000013 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000012 /* PersistenceService.swift */; };
+		BB000014 /* TimerDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000014 /* TimerDisplayView.swift */; };
+		BB000015 /* QuickActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000015 /* QuickActionsView.swift */; };
+		BB000016 /* ExerciseSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000016 /* ExerciseSessionView.swift */; };
+		BB000017 /* ExerciseStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000017 /* ExerciseStepView.swift */; };
+		BB000018 /* ExerciseCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000018 /* ExerciseCompleteView.swift */; };
+		BB000019 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000019 /* DashboardView.swift */; };
+		BB000020 /* DailyStatsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020 /* DailyStatsChart.swift */; };
+		BB000021 /* WeeklyStatsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000021 /* WeeklyStatsChart.swift */; };
+		BB000022 /* StreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000022 /* StreakView.swift */; };
+		BB000023 /* ExerciseHistoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000023 /* ExerciseHistoryList.swift */; };
+		BB000024 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000024 /* SettingsView.swift */; };
+		BB000025 /* GeneralSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000025 /* GeneralSettingsTab.swift */; };
+		BB000026 /* RoutineSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000026 /* RoutineSettingsTab.swift */; };
+		BB000027 /* HealthSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000027 /* HealthSettingsTab.swift */; };
+		BB000028 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000028 /* CircularProgressView.swift */; };
+		BB000029 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000029 /* Constants.swift */; };
+		BB000030 /* TimeFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000030 /* TimeFormatting.swift */; };
+		BB000031 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000035 /* DesignSystem.swift */; };
+		BB000032 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB000031 /* Assets.xcassets */; };
+		BB000033 /* DefaultRoutines.json in Resources */ = {isa = PBXBuildFile; fileRef = AB000032 /* DefaultRoutines.json */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AB000001 /* PulseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseApp.swift; sourceTree = "<group>"; };
+		AB000002 /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
+		AB000003 /* Routine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routine.swift; sourceTree = "<group>"; };
+		AB000004 /* WorkSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkSession.swift; sourceTree = "<group>"; };
+		AB000005 /* ExerciseLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseLog.swift; sourceTree = "<group>"; };
+		AB000006 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		AB000007 /* TimerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerService.swift; sourceTree = "<group>"; };
+		AB000008 /* ExerciseSessionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSessionService.swift; sourceTree = "<group>"; };
+		AB000009 /* AudioGuidanceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGuidanceService.swift; sourceTree = "<group>"; };
+		AB000010 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		AB000011 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		AB000012 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
+		AB000013 /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
+		AB000014 /* TimerDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerDisplayView.swift; sourceTree = "<group>"; };
+		AB000015 /* QuickActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionsView.swift; sourceTree = "<group>"; };
+		AB000016 /* ExerciseSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseSessionView.swift; sourceTree = "<group>"; };
+		AB000017 /* ExerciseStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseStepView.swift; sourceTree = "<group>"; };
+		AB000018 /* ExerciseCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseCompleteView.swift; sourceTree = "<group>"; };
+		AB000019 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		AB000020 /* DailyStatsChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyStatsChart.swift; sourceTree = "<group>"; };
+		AB000021 /* WeeklyStatsChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyStatsChart.swift; sourceTree = "<group>"; };
+		AB000022 /* StreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakView.swift; sourceTree = "<group>"; };
+		AB000023 /* ExerciseHistoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseHistoryList.swift; sourceTree = "<group>"; };
+		AB000024 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AB000025 /* GeneralSettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsTab.swift; sourceTree = "<group>"; };
+		AB000026 /* RoutineSettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSettingsTab.swift; sourceTree = "<group>"; };
+		AB000027 /* HealthSettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSettingsTab.swift; sourceTree = "<group>"; };
+		AB000028 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
+		AB000029 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		AB000030 /* TimeFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormatting.swift; sourceTree = "<group>"; };
+		AB000031 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AB000032 /* DefaultRoutines.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = DefaultRoutines.json; sourceTree = "<group>"; };
+		AB000033 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AB000034 /* Pulse.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pulse.entitlements; sourceTree = "<group>"; };
+		AB000035 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		AB000036 /* IconGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconGenerator.swift; sourceTree = "<group>"; };
+		AB000037 /* ScreenActivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenActivityService.swift; sourceTree = "<group>"; };
+		AB000038 /* PulseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseApp.swift; sourceTree = "<group>"; };
+		AB000039 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		AC000001 /* Pulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC000002 /* Pulse iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pulse iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AD000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AE000001 = {
+			isa = PBXGroup;
+			children = (
+				AE000002 /* App */,
+				AE000003 /* Models */,
+				AE000004 /* Services */,
+				AE000005 /* Views */,
+				AE000012 /* Utilities */,
+				AE000013 /* Resources */,
+				AB000034 /* Pulse.entitlements */,
+				AE000014 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AE000002 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AE000015 /* macOS */,
+				AE000016 /* iOS */,
+				AB000033 /* Info.plist */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AE000003 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AB000002 /* Exercise.swift */,
+				AB000003 /* Routine.swift */,
+				AB000004 /* WorkSession.swift */,
+				AB000005 /* ExerciseLog.swift */,
+				AB000006 /* AppSettings.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AE000004 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AB000007 /* TimerService.swift */,
+				AB000008 /* ExerciseSessionService.swift */,
+				AB000009 /* AudioGuidanceService.swift */,
+				AB000010 /* NotificationService.swift */,
+				AB000011 /* HealthKitService.swift */,
+				AB000012 /* PersistenceService.swift */,
+				AB000037 /* ScreenActivityService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AE000005 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AE000006 /* MenuBar */,
+				AE000007 /* Exercise */,
+				AE000008 /* Dashboard */,
+				AE000009 /* Settings */,
+				AE000010 /* Common */,
+				AE000017 /* iOS */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AE000006 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				AB000013 /* MenuBarContentView.swift */,
+				AB000014 /* TimerDisplayView.swift */,
+				AB000015 /* QuickActionsView.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
+		AE000007 /* Exercise */ = {
+			isa = PBXGroup;
+			children = (
+				AB000016 /* ExerciseSessionView.swift */,
+				AB000017 /* ExerciseStepView.swift */,
+				AB000018 /* ExerciseCompleteView.swift */,
+			);
+			path = Exercise;
+			sourceTree = "<group>";
+		};
+		AE000008 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				AB000019 /* DashboardView.swift */,
+				AB000020 /* DailyStatsChart.swift */,
+				AB000021 /* WeeklyStatsChart.swift */,
+				AB000022 /* StreakView.swift */,
+				AB000023 /* ExerciseHistoryList.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		AE000009 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				AB000024 /* SettingsView.swift */,
+				AB000025 /* GeneralSettingsTab.swift */,
+				AB000026 /* RoutineSettingsTab.swift */,
+				AB000027 /* HealthSettingsTab.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		AE000010 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				AB000028 /* CircularProgressView.swift */,
+				AB000035 /* DesignSystem.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		AE000012 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				AB000029 /* Constants.swift */,
+				AB000030 /* TimeFormatting.swift */,
+				AB000036 /* IconGenerator.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		AE000013 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AB000031 /* Assets.xcassets */,
+				AB000032 /* DefaultRoutines.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		AE000014 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC000001 /* Pulse.app */,
+				AC000002 /* Pulse iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AE000015 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				AB000001 /* PulseApp.swift */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		AE000016 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				AB000038 /* PulseApp.swift */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		AE000017 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				AB000039 /* HomeView.swift */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AF000001 /* Pulse */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AG000003 /* Build configuration list for PBXNativeTarget "Pulse" */;
+			buildPhases = (
+				AF000002 /* Sources */,
+				AD000001 /* Frameworks */,
+				AF000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Pulse;
+			productName = Pulse;
+			productReference = AC000001 /* Pulse.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AF000011 /* Pulse iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AG000004 /* Build configuration list for PBXNativeTarget "Pulse iOS" */;
+			buildPhases = (
+				AF000012 /* Sources */,
+				AD000002 /* Frameworks */,
+				AF000013 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pulse iOS";
+			productName = "Pulse iOS";
+			productReference = AC000002 /* Pulse iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AF000010 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					AF000001 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					AF000011 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = AG000001 /* Build configuration list for PBXProject "Pulse" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AE000001;
+			productRefGroup = AE000014 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AF000001 /* Pulse */,
+				AF000011 /* Pulse iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AF000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000031 /* Assets.xcassets in Resources */,
+				AA000032 /* DefaultRoutines.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AF000013 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB000032 /* Assets.xcassets in Resources */,
+				BB000033 /* DefaultRoutines.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AF000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001 /* PulseApp.swift in Sources */,
+				AA000002 /* Exercise.swift in Sources */,
+				AA000003 /* Routine.swift in Sources */,
+				AA000004 /* WorkSession.swift in Sources */,
+				AA000005 /* ExerciseLog.swift in Sources */,
+				AA000006 /* AppSettings.swift in Sources */,
+				AA000007 /* TimerService.swift in Sources */,
+				AA000008 /* ExerciseSessionService.swift in Sources */,
+				AA000009 /* AudioGuidanceService.swift in Sources */,
+				AA000010 /* NotificationService.swift in Sources */,
+				AA000011 /* HealthKitService.swift in Sources */,
+				AA000012 /* PersistenceService.swift in Sources */,
+				AA000013 /* MenuBarContentView.swift in Sources */,
+				AA000014 /* TimerDisplayView.swift in Sources */,
+				AA000015 /* QuickActionsView.swift in Sources */,
+				AA000016 /* ExerciseSessionView.swift in Sources */,
+				AA000017 /* ExerciseStepView.swift in Sources */,
+				AA000018 /* ExerciseCompleteView.swift in Sources */,
+				AA000019 /* DashboardView.swift in Sources */,
+				AA000020 /* DailyStatsChart.swift in Sources */,
+				AA000021 /* WeeklyStatsChart.swift in Sources */,
+				AA000022 /* StreakView.swift in Sources */,
+				AA000023 /* ExerciseHistoryList.swift in Sources */,
+				AA000024 /* SettingsView.swift in Sources */,
+				AA000025 /* GeneralSettingsTab.swift in Sources */,
+				AA000026 /* RoutineSettingsTab.swift in Sources */,
+				AA000027 /* HealthSettingsTab.swift in Sources */,
+				AA000028 /* CircularProgressView.swift in Sources */,
+				AA000029 /* Constants.swift in Sources */,
+				AA000030 /* TimeFormatting.swift in Sources */,
+				AA000033 /* DesignSystem.swift in Sources */,
+				AA000034 /* IconGenerator.swift in Sources */,
+				AA000035 /* ScreenActivityService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AF000012 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB000001 /* PulseApp.swift in Sources */,
+				BB000002 /* HomeView.swift in Sources */,
+				BB000003 /* Exercise.swift in Sources */,
+				BB000004 /* Routine.swift in Sources */,
+				BB000005 /* WorkSession.swift in Sources */,
+				BB000006 /* ExerciseLog.swift in Sources */,
+				BB000007 /* AppSettings.swift in Sources */,
+				BB000008 /* TimerService.swift in Sources */,
+				BB000009 /* ExerciseSessionService.swift in Sources */,
+				BB000010 /* AudioGuidanceService.swift in Sources */,
+				BB000011 /* NotificationService.swift in Sources */,
+				BB000012 /* HealthKitService.swift in Sources */,
+				BB000013 /* PersistenceService.swift in Sources */,
+				BB000014 /* TimerDisplayView.swift in Sources */,
+				BB000015 /* QuickActionsView.swift in Sources */,
+				BB000016 /* ExerciseSessionView.swift in Sources */,
+				BB000017 /* ExerciseStepView.swift in Sources */,
+				BB000018 /* ExerciseCompleteView.swift in Sources */,
+				BB000019 /* DashboardView.swift in Sources */,
+				BB000020 /* DailyStatsChart.swift in Sources */,
+				BB000021 /* WeeklyStatsChart.swift in Sources */,
+				BB000022 /* StreakView.swift in Sources */,
+				BB000023 /* ExerciseHistoryList.swift in Sources */,
+				BB000024 /* SettingsView.swift in Sources */,
+				BB000025 /* GeneralSettingsTab.swift in Sources */,
+				BB000026 /* RoutineSettingsTab.swift in Sources */,
+				BB000027 /* HealthSettingsTab.swift in Sources */,
+				BB000028 /* CircularProgressView.swift in Sources */,
+				BB000029 /* Constants.swift in Sources */,
+				BB000030 /* TimeFormatting.swift in Sources */,
+				BB000031 /* DesignSystem.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AG000010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AG000011 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		AG000020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.microdynamics.pulse;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AG000021 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.microdynamics.pulse;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		AG000030 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Pulse.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = DXN3AN6TZ7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Pulse uses Health data to track your exercise sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Pulse logs your exercise sessions as workouts in Apple Health.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.microdynamics.pulse.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AG000031 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Pulse.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = DXN3AN6TZ7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Pulse uses Health data to track your exercise sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Pulse logs your exercise sessions as workouts in Apple Health.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.microdynamics.pulse.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AG000001 /* Build configuration list for PBXProject "Pulse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AG000010 /* Debug */,
+				AG000011 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AG000003 /* Build configuration list for PBXNativeTarget "Pulse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AG000020 /* Debug */,
+				AG000021 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AG000004 /* Build configuration list for PBXNativeTarget "Pulse iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AG000030 /* Debug */,
+				AG000031 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AF000010 /* Project object */;
+}

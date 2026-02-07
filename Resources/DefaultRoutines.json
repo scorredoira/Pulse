@@ -1,0 +1,65 @@
+{
+  "routines": [
+    {
+      "name": "Default Routine",
+      "isDefault": true,
+      "exercises": [
+        {
+          "name": "Plank",
+          "durationSeconds": 30,
+          "description": "Hold a plank position. Keep your core tight and body straight.",
+          "iconName": "figure.core.training",
+          "healthKitActivityType": 20
+        },
+        {
+          "name": "Walk",
+          "durationSeconds": 300,
+          "description": "Walk around or use the treadmill. Keep a brisk pace.",
+          "iconName": "figure.walk",
+          "healthKitActivityType": 37
+        },
+        {
+          "name": "Stretch",
+          "durationSeconds": 60,
+          "description": "Full body stretch. Focus on neck, shoulders, back, and legs.",
+          "iconName": "figure.flexibility",
+          "healthKitActivityType": 52
+        },
+        {
+          "name": "Push-ups",
+          "durationSeconds": 45,
+          "description": "Do push-ups at your own pace. Modify as needed.",
+          "iconName": "figure.strengthtraining.functional",
+          "healthKitActivityType": 13
+        }
+      ]
+    },
+    {
+      "name": "Quick Break",
+      "isDefault": false,
+      "exercises": [
+        {
+          "name": "Neck Stretch",
+          "durationSeconds": 20,
+          "description": "Gently tilt your head left, right, forward, and back.",
+          "iconName": "figure.flexibility",
+          "healthKitActivityType": 52
+        },
+        {
+          "name": "Shoulder Rolls",
+          "durationSeconds": 15,
+          "description": "Roll shoulders forward and backward.",
+          "iconName": "figure.flexibility",
+          "healthKitActivityType": 52
+        },
+        {
+          "name": "Stand & Walk",
+          "durationSeconds": 60,
+          "description": "Stand up and walk around briefly.",
+          "iconName": "figure.walk",
+          "healthKitActivityType": 37
+        }
+      ]
+    }
+  ]
+}
