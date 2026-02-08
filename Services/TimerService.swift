@@ -198,6 +198,13 @@ final class TimerService {
         startTimer()
     }
 
+    func restartRoutine(routineId: String) {
+        guard let index = routineTimers.firstIndex(where: { $0.id == routineId }) else { return }
+        routineTimers[index].remainingSeconds = routineTimers[index].totalSeconds
+        routineTimers[index].state = .running
+        startTimer()
+    }
+
     func restartAndResumeOthers(routineId: String) {
         guard let index = routineTimers.firstIndex(where: { $0.id == routineId }) else { return }
         routineTimers[index].remainingSeconds = routineTimers[index].totalSeconds

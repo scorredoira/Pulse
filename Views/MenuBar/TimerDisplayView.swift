@@ -39,6 +39,7 @@ struct TimerDisplayView: View {
 
 struct CompactTimerRow: View {
     let routineTimer: RoutineTimer
+    var onSkip: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: rowSpacing) {
@@ -54,6 +55,15 @@ struct CompactTimerRow: View {
                     .foregroundStyle(.primary)
                     .contentTransition(.numericText(countsDown: true))
                     .animation(.default, value: routineTimer.remainingSeconds)
+                if let onSkip {
+                    Button {
+                        onSkip()
+                    } label: {
+                        Image(systemName: "forward.end.fill")
+                            .font(.caption2)
+                    }
+                    .buttonStyle(PillButtonStyle(color: .secondary))
+                }
             }
 
             GeometryReader { geometry in

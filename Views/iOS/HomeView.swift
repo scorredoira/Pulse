@@ -138,7 +138,9 @@ struct HomeView: View {
         } else {
             VStack(spacing: Spacing.sm) {
                 ForEach(timerService.routineTimers.filter { $0.state == .running || $0.state == .paused }) { rt in
-                    CompactTimerRow(routineTimer: rt)
+                    CompactTimerRow(routineTimer: rt) {
+                        timerService.restartRoutine(routineId: rt.id)
+                    }
                 }
             }
         }
@@ -174,6 +176,13 @@ struct HomeView: View {
                 postponeButton(minutes: 2)
                 postponeButton(minutes: 5)
             }
+
+            Button {
+                skipExercises()
+            } label: {
+                Label("Skip", systemImage: "forward.end.fill")
+            }
+            .buttonStyle(PillButtonStyle(color: .secondary))
         }
         .task {
             autoStartCountdown = 5
@@ -226,6 +235,12 @@ struct HomeView: View {
         }
     }
 
+    private func skipExercises() {
+        guard let routineId = timerService.activeExerciseRoutineId else { return }
+        timerService.restartAndResumeOthers(routineId: routineId)
+        exerciseRoutineId = nil
+    }
+
     private func snoozeExercises(minutes: Int) {
         timerService.snooze(seconds: minutes * 60)
         exerciseRoutineId = nil
@@ -248,6 +263,11 @@ struct HomeView: View {
 
         exerciseSessionService.onSessionComplete = { logs in
             saveSession(logs: logs, routineId: routineId)
+            timerService.restartAndResumeOthers(routineId: routineId)
+            exerciseRoutineId = nil
+        }
+
+        exerciseSessionService.onSessionCancel = {
             timerService.restartAndResumeOthers(routineId: routineId)
             exerciseRoutineId = nil
         }

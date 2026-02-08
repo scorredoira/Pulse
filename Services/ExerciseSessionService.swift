@@ -48,6 +48,7 @@ final class ExerciseSessionService {
 
     var audioService: AudioGuidanceService?
     var onSessionComplete: (([ExerciseLog]) -> Void)?
+    var onSessionCancel: (() -> Void)?
 
     private var timer: Timer?
 
@@ -98,6 +99,7 @@ final class ExerciseSessionService {
         currentSet = 1
         phase = .exercise
         audioService?.stop()
+        onSessionCancel?()
     }
 
     // MARK: - Flow
