@@ -8,6 +8,7 @@ struct PulseApp: App {
     @State private var audioService = AudioGuidanceService()
     @State private var healthKitService = HealthKitService()
     @State private var screenActivityService: ScreenActivityService?
+    @AppStorage("showTimerInMenuBar") private var showTimerInMenuBar = false
     @Environment(\.openWindow) private var openWindow
 
     let container: ModelContainer
@@ -98,7 +99,11 @@ struct PulseApp: App {
         case .idle:
             Image(systemName: "figure.run")
         case .running, .paused:
-            Text(timerService.displayString)
+            if showTimerInMenuBar {
+                Text(timerService.displayString)
+            } else {
+                Image(systemName: "figure.run")
+            }
         case .exerciseTime:
             Image(systemName: "figure.run")
                 .symbolEffect(.pulse)

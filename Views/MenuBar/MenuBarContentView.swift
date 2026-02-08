@@ -12,7 +12,6 @@ struct MenuBarContentView: View {
     var audioService: AudioGuidanceService
     var healthKitService: HealthKitService
 
-    @State private var autoStartCountdown: Int = 5
     @State private var exerciseRoutineId: String?
 
     private var appSettings: AppSettings? { settings.first }
@@ -146,28 +145,17 @@ struct MenuBarContentView: View {
                 .foregroundStyle(.accent)
                 .symbolEffect(.bounce)
 
-            Text("Time to Move!")
+            Text("Exercise Time!")
                 .font(.headline)
 
-            if let routine = exerciseRoutine, !routine.exercises.isEmpty {
-                Text("\(routine.name) — \(TimeFormatting.formatMinutesSeconds(routine.totalDurationSeconds))")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
-            // Auto-start countdown
-            Text("Starting in \(autoStartCountdown)...")
-                .font(.system(.title2, design: .rounded, weight: .bold))
-                .monospacedDigit()
-                .foregroundStyle(.green)
-                .contentTransition(.numericText(countsDown: true))
-                .animation(.default, value: autoStartCountdown)
-
-            // Postpone options
-            HStack(spacing: Spacing.sm) {
-                postponeButton(minutes: 1)
-                postponeButton(minutes: 2)
-                postponeButton(minutes: 5)
+            if exerciseSessionService.state != .idle {
+                Button {
+                    NSApplication.shared.activate()
+                    openWindow(id: Constants.WindowID.exerciseSession)
+                } label: {
+                    Label("Show Exercise Window", systemImage: "arrow.up.forward.app")
+                }
+                .buttonStyle(WidePillButtonStyle(color: .accentColor))
             }
 
             Button {
@@ -177,23 +165,6 @@ struct MenuBarContentView: View {
             }
             .buttonStyle(PillButtonStyle(color: .secondary))
         }
-        .task {
-            autoStartCountdown = 5
-            for i in (0..<5).reversed() {
-                try? await Task.sleep(for: .seconds(1))
-                autoStartCountdown = i
-            }
-            startExerciseSession(for: exerciseRoutine)
-        }
-    }
-
-    private func postponeButton(minutes: Int) -> some View {
-        Button {
-            snoozeExercises(minutes: minutes)
-        } label: {
-            Text("+\(minutes) min")
-        }
-        .buttonStyle(PillButtonStyle(color: .orange))
     }
 
     // MARK: - Actions
@@ -209,9 +180,11 @@ struct MenuBarContentView: View {
     private func setupTimerCallback() {
         timerService.onRoutineTimerComplete = { [self] routineId in
             exerciseRoutineId = routineId
-            NotificationService.shared.sendExerciseReminder()
             audioService.announceWorkIntervalComplete()
             audioService.playBeep()
+            // Start exercise session immediately — no countdown, no notification
+            let routine = activeRoutines.first { $0.name == routineId }
+            startExerciseSession(for: routine)
         }
 
         NotificationService.shared.onStartExercise = { [self] in
@@ -271,6 +244,10 @@ struct MenuBarContentView: View {
         exerciseSessionService.onSessionCancel = {
             timerService.restartAndResumeOthers(routineId: routineId)
             exerciseRoutineId = nil
+        }
+
+        exerciseSessionService.onPostpone = { [self] minutes in
+            snoozeExercises(minutes: minutes)
         }
 
         exerciseSessionService.startSession(with: exercises, audioService: audioService)

@@ -3,6 +3,7 @@ import SwiftData
 
 enum ExerciseSessionState {
     case idle
+    case preparing
     case running
     case paused
     case completed
@@ -46,11 +47,15 @@ final class ExerciseSessionService {
 
     var totalExercises: Int { exercises.count }
 
+    var preparingCountdown: Int = 5
+
     var audioService: AudioGuidanceService?
     var onSessionComplete: (([ExerciseLog]) -> Void)?
     var onSessionCancel: (() -> Void)?
+    var onPostpone: ((Int) -> Void)?
 
     private var timer: Timer?
+    private var preparingTimer: Timer?
 
     func startSession(with exercises: [Exercise], audioService: AudioGuidanceService) {
         self.exercises = exercises
@@ -59,9 +64,47 @@ final class ExerciseSessionService {
         self.currentExerciseIndex = 0
         self.currentSet = 1
         self.phase = .exercise
-        self.state = .running
+        self.preparingCountdown = 5
+        self.state = .preparing
 
+        startPreparingCountdown()
+    }
+
+    func postpone(minutes: Int) {
+        stopPreparingTimer()
+        stopTimer()
+        state = .idle
+        exercises = []
+        completedLogs = []
+        currentSet = 1
+        phase = .exercise
+        onPostpone?(minutes)
+    }
+
+    func startNow() {
+        stopPreparingTimer()
+        state = .running
         announceAndStartExercise()
+    }
+
+    private func startPreparingCountdown() {
+        stopPreparingTimer()
+        preparingTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self else { return }
+            if self.preparingCountdown > 1 {
+                self.preparingCountdown -= 1
+            } else {
+                self.stopPreparingTimer()
+                self.state = .running
+                self.announceAndStartExercise()
+            }
+        }
+        RunLoop.main.add(preparingTimer!, forMode: .common)
+    }
+
+    private func stopPreparingTimer() {
+        preparingTimer?.invalidate()
+        preparingTimer = nil
     }
 
     func pause() {
@@ -92,6 +135,7 @@ final class ExerciseSessionService {
     }
 
     func cancelSession() {
+        stopPreparingTimer()
         stopTimer()
         state = .idle
         exercises = []

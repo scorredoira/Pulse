@@ -6,6 +6,8 @@ import ServiceManagement
 
 struct GeneralSettingsTab: View {
     @Query private var settings: [AppSettings]
+    @AppStorage("showTimerInMenuBar") private var showTimerInMenuBar = false
+    @AppStorage("exerciseWindowAlwaysOnTop") private var exerciseWindowAlwaysOnTop = false
 
     private var appSettings: AppSettings? { settings.first }
 
@@ -67,6 +69,14 @@ struct GeneralSettingsTab: View {
                 }
 
                 #if os(macOS)
+                Section("Menu Bar") {
+                    Toggle("Show timer in menu bar", isOn: $showTimerInMenuBar)
+                }
+
+                Section("Exercise Window") {
+                    Toggle("Always on top", isOn: $exerciseWindowAlwaysOnTop)
+                }
+
                 Section("System") {
                     Toggle("Launch at login", isOn: Binding(
                         get: { settings.launchAtLogin },
