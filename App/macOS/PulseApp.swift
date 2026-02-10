@@ -7,8 +7,10 @@ struct PulseApp: App {
     @State private var exerciseSessionService = ExerciseSessionService()
     @State private var audioService = AudioGuidanceService()
     @State private var healthKitService = HealthKitService()
+    @State private var routineFileService = RoutineFileService()
     @State private var screenActivityService: ScreenActivityService?
     @AppStorage("showTimerInMenuBar") private var showTimerInMenuBar = false
+    @AppStorage("autoStartTimers") private var autoStartTimers = true
     @Environment(\.openWindow) private var openWindow
 
     let container: ModelContainer
@@ -45,6 +47,10 @@ struct PulseApp: App {
             }
         } label: {
             menuBarLabel
+                .task {
+                    setupTimerCallback()
+                    autoStartIfNeeded()
+                }
         }
         .menuBarExtraStyle(.window)
 
@@ -66,7 +72,7 @@ struct PulseApp: App {
         .defaultLaunchBehavior(.suppressed)
 
         Window("Settings", id: Constants.WindowID.settings) {
-            SettingsView(healthKitService: healthKitService)
+            SettingsView(healthKitService: healthKitService, routineFileService: routineFileService)
                 .modelContainer(container)
                 .onAppear { setDockVisible(true) }
                 .onDisappear { hideDockIfNoWindows() }
@@ -90,6 +96,72 @@ struct PulseApp: App {
             if !hasVisibleWindow {
                 NSApplication.shared.setActivationPolicy(.accessory)
             }
+        }
+    }
+
+    // MARK: - Auto-start & timer callback
+
+    private func autoStartIfNeeded() {
+        guard autoStartTimers, timerService.state == .idle else { return }
+        let descriptor = FetchDescriptor<Routine>(predicate: #Predicate<Routine> { $0.isActive == true })
+        guard let routines = try? container.mainContext.fetch(descriptor) else { return }
+        let timers = routines.filter { !$0.exercises.isEmpty }.map { r in
+            (id: r.name, name: r.name, intervalMinutes: r.intervalMinutes)
+        }
+        guard !timers.isEmpty else { return }
+        timerService.startAll(routines: timers)
+    }
+
+    private func setupTimerCallback() {
+        timerService.onRoutineTimerComplete = { [self] routineId in
+            audioService.announceWorkIntervalComplete()
+            audioService.playBeep()
+            startExerciseFromApp(routineId: routineId)
+        }
+    }
+
+    private func startExerciseFromApp(routineId: String) {
+        let descriptor = FetchDescriptor<Routine>(predicate: #Predicate<Routine> { $0.isActive == true })
+        guard let routines = try? container.mainContext.fetch(descriptor),
+              let routine = routines.first(where: { $0.name == routineId }),
+              !routine.sortedExercises.isEmpty else { return }
+
+        let exercises = routine.sortedExercises
+
+        // Configure audio from settings
+        let settingsDescriptor = FetchDescriptor<AppSettings>()
+        if let settings = try? container.mainContext.fetch(settingsDescriptor).first {
+            audioService.soundEnabled = settings.soundEnabled
+            audioService.voiceGuidanceEnabled = settings.voiceGuidanceEnabled
+            audioService.speechRate = settings.speechRate
+            audioService.speechVolume = settings.speechVolume
+        }
+
+        exerciseSessionService.onSessionComplete = { logs in
+            let session = WorkSession(
+                startDate: Date().addingTimeInterval(-Double(logs.reduce(0) { $0 + $1.durationSeconds })),
+                endDate: .now,
+                workIntervalMinutes: routine.intervalMinutes,
+                wasCompleted: true,
+                exerciseLogs: logs
+            )
+            container.mainContext.insert(session)
+            timerService.restartAndResumeOthers(routineId: routineId)
+        }
+
+        exerciseSessionService.onSessionCancel = {
+            timerService.restartAndResumeOthers(routineId: routineId)
+        }
+
+        exerciseSessionService.onPostpone = { minutes in
+            timerService.snooze(seconds: minutes * 60)
+        }
+
+        exerciseSessionService.startSession(with: exercises, audioService: audioService)
+
+        DispatchQueue.main.async {
+            NSApplication.shared.activate()
+            openWindow(id: Constants.WindowID.exerciseSession)
         }
     }
 

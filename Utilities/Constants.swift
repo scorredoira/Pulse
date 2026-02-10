@@ -16,6 +16,17 @@ enum Constants {
         static let settings = "settings"
     }
 
+    enum FilePaths {
+        #if os(macOS)
+        static let configDirectory = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent(".config/pulse")
+        #else
+        static let configDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            .appendingPathComponent("pulse")
+        #endif
+        static let routinesFile = configDirectory.appendingPathComponent("routines.json")
+    }
+
     enum NotificationAction {
         static let categoryID = "EXERCISE_REMINDER"
         static let startAction = "START_EXERCISE"

@@ -7,6 +7,7 @@ struct PulseApp: App {
     @State private var exerciseSessionService = ExerciseSessionService()
     @State private var audioService = AudioGuidanceService()
     @State private var healthKitService = HealthKitService()
+    @State private var routineFileService = RoutineFileService()
 
     let container: ModelContainer
 
@@ -27,7 +28,8 @@ struct PulseApp: App {
                 timerService: timerService,
                 exerciseSessionService: exerciseSessionService,
                 audioService: audioService,
-                healthKitService: healthKitService
+                healthKitService: healthKitService,
+                routineFileService: routineFileService
             )
             .modelContainer(container)
         }

@@ -75,6 +75,12 @@
 		BB000031 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000035 /* DesignSystem.swift */; };
 		BB000032 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB000031 /* Assets.xcassets */; };
 		BB000033 /* DefaultRoutines.json in Resources */ = {isa = PBXBuildFile; fileRef = AB000032 /* DefaultRoutines.json */; };
+		AA000036 /* RoutineFileModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000040 /* RoutineFileModels.swift */; };
+		AA000037 /* RoutineFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000041 /* RoutineFileService.swift */; };
+		AA000038 /* RoutineImportExportSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000042 /* RoutineImportExportSection.swift */; };
+		BB000034 /* RoutineFileModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000040 /* RoutineFileModels.swift */; };
+		BB000035 /* RoutineFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000041 /* RoutineFileService.swift */; };
+		BB000036 /* RoutineImportExportSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000042 /* RoutineImportExportSection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -117,6 +123,9 @@
 		AB000037 /* ScreenActivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenActivityService.swift; sourceTree = "<group>"; };
 		AB000038 /* PulseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseApp.swift; sourceTree = "<group>"; };
 		AB000039 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		AB000040 /* RoutineFileModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineFileModels.swift; sourceTree = "<group>"; };
+		AB000041 /* RoutineFileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineFileService.swift; sourceTree = "<group>"; };
+		AB000042 /* RoutineImportExportSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineImportExportSection.swift; sourceTree = "<group>"; };
 		AC000001 /* Pulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC000002 /* Pulse iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pulse iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -171,6 +180,7 @@
 				AB000004 /* WorkSession.swift */,
 				AB000005 /* ExerciseLog.swift */,
 				AB000006 /* AppSettings.swift */,
+				AB000040 /* RoutineFileModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -185,6 +195,7 @@
 				AB000011 /* HealthKitService.swift */,
 				AB000012 /* PersistenceService.swift */,
 				AB000037 /* ScreenActivityService.swift */,
+				AB000041 /* RoutineFileService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -241,6 +252,7 @@
 				AB000025 /* GeneralSettingsTab.swift */,
 				AB000026 /* RoutineSettingsTab.swift */,
 				AB000027 /* HealthSettingsTab.swift */,
+				AB000042 /* RoutineImportExportSection.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -439,6 +451,9 @@
 				AA000033 /* DesignSystem.swift in Sources */,
 				AA000034 /* IconGenerator.swift in Sources */,
 				AA000035 /* ScreenActivityService.swift in Sources */,
+				AA000036 /* RoutineFileModels.swift in Sources */,
+				AA000037 /* RoutineFileService.swift in Sources */,
+				AA000038 /* RoutineImportExportSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,6 +492,9 @@
 				BB000029 /* Constants.swift in Sources */,
 				BB000030 /* TimeFormatting.swift in Sources */,
 				BB000031 /* DesignSystem.swift in Sources */,
+				BB000034 /* RoutineFileModels.swift in Sources */,
+				BB000035 /* RoutineFileService.swift in Sources */,
+				BB000036 /* RoutineImportExportSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -664,6 +682,7 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = DXN3AN6TZ7;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/iOS/Info.plist";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Pulse uses Health data to track your exercise sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Pulse logs your exercise sessions as workouts in Apple Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -697,6 +716,7 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = DXN3AN6TZ7;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/iOS/Info.plist";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Pulse uses Health data to track your exercise sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Pulse logs your exercise sessions as workouts in Apple Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

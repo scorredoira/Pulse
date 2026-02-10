@@ -4,6 +4,7 @@ import SwiftData
 struct RoutineSettingsTab: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var routines: [Routine]
+    var routineFileService: RoutineFileService
 
     @State private var selectedRoutine: Routine?
     @State private var isAddingRoutine = false
@@ -148,6 +149,15 @@ struct RoutineSettingsTab: View {
             .buttonStyle(.bordered)
             .padding(.horizontal, 10)
             .padding(.vertical, 8)
+
+            Divider()
+
+            RoutineImportExportSection(fileService: routineFileService)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+        }
+        .onDisappear {
+            routineFileService.stopWatching()
         }
     }
 

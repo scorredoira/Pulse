@@ -11,10 +11,12 @@ struct HomeView: View {
     var exerciseSessionService: ExerciseSessionService
     var audioService: AudioGuidanceService
     var healthKitService: HealthKitService
+    var routineFileService: RoutineFileService
 
     @Environment(\.scenePhase) private var scenePhase
 
     @State private var showExerciseSession = false
+    @State private var showImportAlert = false
     @State private var autoStartCountdown: Int = 5
     @State private var exerciseRoutineId: String?
 
@@ -37,13 +39,25 @@ struct HomeView: View {
                     Label("Dashboard", systemImage: "chart.bar.fill")
                 }
 
-            SettingsView(healthKitService: healthKitService)
+            SettingsView(healthKitService: healthKitService, routineFileService: routineFileService)
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }
         }
         .fullScreenCover(isPresented: $showExerciseSession) {
             ExerciseSessionView(sessionService: exerciseSessionService)
+        }
+        .onOpenURL { url in
+            routineFileService.importRoutines(from: url, into: modelContext)
+            showImportAlert = true
+        }
+        .alert(
+            routineFileService.lastError != nil ? "Import Failed" : "Routines Imported",
+            isPresented: $showImportAlert
+        ) {
+            Button("OK") {}
+        } message: {
+            Text(routineFileService.lastError ?? routineFileService.lastSuccess ?? "")
         }
         .onAppear {
             setupTimerCallback()

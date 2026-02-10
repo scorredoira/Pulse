@@ -2,11 +2,12 @@ import SwiftUI
 
 struct SettingsView: View {
     var healthKitService: HealthKitService
+    var routineFileService: RoutineFileService
 
     var body: some View {
         #if os(macOS)
         TabView {
-            RoutineSettingsTab()
+            RoutineSettingsTab(routineFileService: routineFileService)
                 .tabItem {
                     Label("Routines", systemImage: "list.bullet")
                 }
@@ -28,7 +29,7 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 NavigationLink {
-                    RoutineSettingsTab()
+                    RoutineSettingsTab(routineFileService: routineFileService)
                         .navigationTitle("Routines")
                 } label: {
                     Label("Routines", systemImage: "list.bullet")
