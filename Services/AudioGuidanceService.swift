@@ -35,12 +35,12 @@ final class AudioGuidanceService {
 
     func announceExercise(name: String, duration: Int) {
         guard voiceGuidanceEnabled else { return }
-        speak("\(name). \(TimeFormatting.spokenDuration(duration)). Go!")
+        speak("\(name). \(TimeFormatting.spokenDuration(duration)).")
     }
 
     func announceExerciseWithSets(name: String, duration: Int, set: Int, totalSets: Int) {
         guard voiceGuidanceEnabled else { return }
-        speak("\(name). Set \(set) of \(totalSets). \(TimeFormatting.spokenDuration(duration)). Go!")
+        speak("\(name). \(set) of \(totalSets). \(TimeFormatting.spokenDuration(duration)).")
     }
 
     func announceRest(duration: Int) {
@@ -55,17 +55,17 @@ final class AudioGuidanceService {
 
     func announceExerciseComplete() {
         guard voiceGuidanceEnabled else { return }
-        speak("Done! Well done.")
+        speak("Done!")
     }
 
     func announceSessionComplete(totalExercises: Int, totalMinutes: Int) {
         guard voiceGuidanceEnabled else { return }
-        speak("Session complete! \(totalExercises) exercises in \(totalMinutes) minutes. Great job!")
+        speak("Session complete! \(totalExercises) exercises in \(totalMinutes) minutes.")
     }
 
     func announceWorkIntervalComplete() {
         guard voiceGuidanceEnabled else { return }
-        speak("Time to move! Let's do some exercises.")
+        speak("Time to move!")
     }
 
     func playBeep() {
@@ -120,10 +120,10 @@ final class AudioGuidanceService {
     #if os(macOS)
     /// Convert AVSpeechUtterance-style rate (0.0–1.0) to NSSpeechSynthesizer rate (words per minute).
     private func nsSpeechRate(from rate: Float) -> Float {
-        // Map 0.3–0.7 range (our slider) roughly to 150–300 wpm.
+        // Map 0.3–0.7 range (our slider) roughly to 130–220 wpm.
         // NSSpeechSynthesizer default rate is ~180–200 wpm.
-        let minWPM: Float = 150
-        let maxWPM: Float = 300
+        let minWPM: Float = 130
+        let maxWPM: Float = 220
         let clamped = min(max(rate, Constants.minimumSpeechRate), Constants.maximumSpeechRate)
         let normalized = (clamped - Constants.minimumSpeechRate) / (Constants.maximumSpeechRate - Constants.minimumSpeechRate)
         return minWPM + normalized * (maxWPM - minWPM)
