@@ -7,6 +7,7 @@ import ServiceManagement
 struct GeneralSettingsTab: View {
     @Query private var settings: [AppSettings]
     @AppStorage("showTimerInMenuBar") private var showTimerInMenuBar = false
+    @AppStorage("autoStartTimers") private var autoStartTimers = true
     @AppStorage("exerciseWindowAlwaysOnTop") private var exerciseWindowAlwaysOnTop = false
 
     private var appSettings: AppSettings? { settings.first }
@@ -75,6 +76,10 @@ struct GeneralSettingsTab: View {
 
                 Section("Exercise Window") {
                     Toggle("Always on top", isOn: $exerciseWindowAlwaysOnTop)
+                }
+
+                Section("Timers") {
+                    Toggle("Auto-start timers on launch", isOn: $autoStartTimers)
                 }
 
                 Section("System") {
