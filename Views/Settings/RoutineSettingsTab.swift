@@ -67,6 +67,11 @@ struct RoutineSettingsTab: View {
         .onAppear {
             selectedRoutine = routines.first
         }
+        .onChange(of: routines) {
+            if let selected = selectedRoutine, !routines.contains(where: { $0.id == selected.id }) {
+                selectedRoutine = routines.first
+            }
+        }
         #endif
     }
 
@@ -233,7 +238,7 @@ struct RoutineSettingsTab: View {
             }
 
             Section("Exercises") {
-                ForEach(routine.sortedExercises, id: \.sortOrder) { exercise in
+                ForEach(routine.sortedExercises) { exercise in
                     exerciseRow(exercise, in: routine)
                 }
                 .onMove { from, to in
@@ -417,7 +422,7 @@ struct RoutineSettingsTab: View {
             }
 
             Section {
-                ForEach(routine.sortedExercises, id: \.sortOrder) { exercise in
+                ForEach(routine.sortedExercises) { exercise in
                     exerciseRow(exercise, in: routine)
                 }
                 .onMove { from, to in
@@ -822,7 +827,6 @@ struct RoutineSettingsTab: View {
     private func deleteRoutine(_ routine: Routine) {
         if selectedRoutine == routine { selectedRoutine = nil }
         modelContext.delete(routine)
-        reindexRoutines()
     }
 
     private func setAsDefault(_ routine: Routine) {
