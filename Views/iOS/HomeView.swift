@@ -127,7 +127,7 @@ struct HomeView: View {
                 onResume: { timerService.resume() },
                 onSkip: { timerService.skip() },
                 onReset: { timerService.reset() },
-                onRestart: { timerService.restartAll() }
+                onRestart: startTimers
             )
         }
         .padding()
@@ -267,7 +267,8 @@ struct HomeView: View {
             VStack(spacing: Spacing.sm) {
                 ForEach(timerService.routineTimers.filter { $0.state == .running || $0.state == .paused }) { rt in
                     CompactTimerRow(routineTimer: rt) {
-                        timerService.restartRoutine(routineId: rt.id)
+                        let interval = activeRoutines.first(where: { $0.name == rt.id })?.intervalMinutes
+                        timerService.restartRoutine(routineId: rt.id, newIntervalMinutes: interval)
                     }
                 }
             }
@@ -359,13 +360,15 @@ struct HomeView: View {
 
         NotificationService.shared.onSkip = {
             guard let routineId = timerService.activeExerciseRoutineId else { return }
-            timerService.restartAndResumeOthers(routineId: routineId)
+            let interval = activeRoutines.first(where: { $0.name == routineId })?.intervalMinutes
+            timerService.restartAndResumeOthers(routineId: routineId, newIntervalMinutes: interval)
         }
     }
 
     private func skipExercises() {
         guard let routineId = timerService.activeExerciseRoutineId else { return }
-        timerService.restartAndResumeOthers(routineId: routineId)
+        let interval = activeRoutines.first(where: { $0.name == routineId })?.intervalMinutes
+        timerService.restartAndResumeOthers(routineId: routineId, newIntervalMinutes: interval)
         exerciseRoutineId = nil
     }
 
@@ -391,12 +394,14 @@ struct HomeView: View {
 
         exerciseSessionService.onSessionComplete = { logs in
             saveSession(logs: logs, routineId: routineId)
-            timerService.restartAndResumeOthers(routineId: routineId)
+            let interval = activeRoutines.first(where: { $0.name == routineId })?.intervalMinutes
+            timerService.restartAndResumeOthers(routineId: routineId, newIntervalMinutes: interval)
             exerciseRoutineId = nil
         }
 
         exerciseSessionService.onSessionCancel = {
-            timerService.restartAndResumeOthers(routineId: routineId)
+            let interval = activeRoutines.first(where: { $0.name == routineId })?.intervalMinutes
+            timerService.restartAndResumeOthers(routineId: routineId, newIntervalMinutes: interval)
             exerciseRoutineId = nil
         }
 

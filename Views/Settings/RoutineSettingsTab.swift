@@ -457,6 +457,14 @@ struct RoutineSettingsTab: View {
             }
             .buttonStyle(.bordered)
             .controlSize(.small)
+
+            Button(role: .destructive) {
+                deleteExercise(exercise, from: routine)
+            } label: {
+                Image(systemName: "trash")
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
         }
         .swipeActions(edge: .trailing) {
             Button(role: .destructive) {

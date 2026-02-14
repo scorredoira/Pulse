@@ -198,15 +198,21 @@ final class TimerService {
         startTimer()
     }
 
-    func restartRoutine(routineId: String) {
+    func restartRoutine(routineId: String, newIntervalMinutes: Int? = nil) {
         guard let index = routineTimers.firstIndex(where: { $0.id == routineId }) else { return }
+        if let minutes = newIntervalMinutes {
+            routineTimers[index].totalSeconds = minutes * 60
+        }
         routineTimers[index].remainingSeconds = routineTimers[index].totalSeconds
         routineTimers[index].state = .running
         startTimer()
     }
 
-    func restartAndResumeOthers(routineId: String) {
+    func restartAndResumeOthers(routineId: String, newIntervalMinutes: Int? = nil) {
         guard let index = routineTimers.firstIndex(where: { $0.id == routineId }) else { return }
+        if let minutes = newIntervalMinutes {
+            routineTimers[index].totalSeconds = minutes * 60
+        }
         routineTimers[index].remainingSeconds = routineTimers[index].totalSeconds
         routineTimers[index].state = .running
         activeExerciseRoutineId = nil

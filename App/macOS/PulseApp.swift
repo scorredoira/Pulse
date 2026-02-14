@@ -146,11 +146,11 @@ struct PulseApp: App {
                 exerciseLogs: logs
             )
             container.mainContext.insert(session)
-            timerService.restartAndResumeOthers(routineId: routineId)
+            timerService.restartAndResumeOthers(routineId: routineId, newIntervalMinutes: routine.intervalMinutes)
         }
 
         exerciseSessionService.onSessionCancel = {
-            timerService.restartAndResumeOthers(routineId: routineId)
+            timerService.restartAndResumeOthers(routineId: routineId, newIntervalMinutes: routine.intervalMinutes)
         }
 
         exerciseSessionService.onPostpone = { minutes in
