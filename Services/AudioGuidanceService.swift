@@ -33,6 +33,16 @@ final class AudioGuidanceService {
         speak("\(name). \(set) of \(totalSets). \(TimeFormatting.spokenDuration(duration)).")
     }
 
+    func announceExerciseWithReps(name: String, reps: Int) {
+        guard voiceGuidanceEnabled else { return }
+        speak("\(name). \(reps) repetitions.")
+    }
+
+    func announceExerciseWithRepsAndSets(name: String, reps: Int, set: Int, totalSets: Int) {
+        guard voiceGuidanceEnabled else { return }
+        speak("\(name). Set \(set) of \(totalSets). \(reps) repetitions.")
+    }
+
     func announceRest(duration: Int) {
         guard voiceGuidanceEnabled else { return }
         speak("Rest. \(TimeFormatting.spokenDuration(duration)).")

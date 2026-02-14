@@ -33,7 +33,7 @@ final class ExerciseSessionService {
     var currentPhaseDuration: Int {
         guard let exercise = currentExercise else { return 0 }
         switch phase {
-        case .exercise: return exercise.durationSeconds
+        case .exercise: return exercise.effectiveDurationSeconds
         case .restBetweenSets: return exercise.restSeconds
         case .restAfterExercise: return exercise.restAfterSeconds
         }
@@ -125,7 +125,7 @@ final class ExerciseSessionService {
 
         let log = ExerciseLog(
             exerciseName: exercise.name,
-            durationSeconds: exercise.durationSeconds - remainingSeconds,
+            durationSeconds: exercise.effectiveDurationSeconds - remainingSeconds,
             skipped: true
         )
         completedLogs.append(log)
@@ -155,17 +155,31 @@ final class ExerciseSessionService {
         }
 
         phase = .exercise
-        remainingSeconds = exercise.durationSeconds
+        remainingSeconds = exercise.effectiveDurationSeconds
 
-        if exercise.sets > 1 {
+        if exercise.reps > 0 {
+            if exercise.sets > 1 {
+                audioService?.announceExerciseWithRepsAndSets(
+                    name: exercise.name,
+                    reps: exercise.reps,
+                    set: currentSet,
+                    totalSets: exercise.sets
+                )
+            } else {
+                audioService?.announceExerciseWithReps(
+                    name: exercise.name,
+                    reps: exercise.reps
+                )
+            }
+        } else if exercise.sets > 1 {
             audioService?.announceExerciseWithSets(
                 name: exercise.name,
-                duration: exercise.durationSeconds,
+                duration: exercise.effectiveDurationSeconds,
                 set: currentSet,
                 totalSets: exercise.sets
             )
         } else {
-            audioService?.announceExercise(name: exercise.name, duration: exercise.durationSeconds)
+            audioService?.announceExercise(name: exercise.name, duration: exercise.effectiveDurationSeconds)
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { [weak self] in
@@ -248,7 +262,7 @@ final class ExerciseSessionService {
 
             let log = ExerciseLog(
                 exerciseName: exercise.name,
-                durationSeconds: exercise.durationSeconds
+                durationSeconds: exercise.effectiveDurationSeconds
             )
             completedLogs.append(log)
 

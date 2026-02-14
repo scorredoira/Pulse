@@ -81,6 +81,8 @@
 		BB000034 /* RoutineFileModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000040 /* RoutineFileModels.swift */; };
 		BB000035 /* RoutineFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000041 /* RoutineFileService.swift */; };
 		BB000036 /* RoutineImportExportSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000042 /* RoutineImportExportSection.swift */; };
+		AA000039 /* ExerciseImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000043 /* ExerciseImageView.swift */; };
+		BB000037 /* ExerciseImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000043 /* ExerciseImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -126,6 +128,7 @@
 		AB000040 /* RoutineFileModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineFileModels.swift; sourceTree = "<group>"; };
 		AB000041 /* RoutineFileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineFileService.swift; sourceTree = "<group>"; };
 		AB000042 /* RoutineImportExportSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineImportExportSection.swift; sourceTree = "<group>"; };
+		AB000043 /* ExerciseImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseImageView.swift; sourceTree = "<group>"; };
 		AC000001 /* Pulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC000002 /* Pulse iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pulse iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -229,6 +232,7 @@
 				AB000016 /* ExerciseSessionView.swift */,
 				AB000017 /* ExerciseStepView.swift */,
 				AB000018 /* ExerciseCompleteView.swift */,
+				AB000043 /* ExerciseImageView.swift */,
 			);
 			path = Exercise;
 			sourceTree = "<group>";
@@ -454,6 +458,7 @@
 				AA000036 /* RoutineFileModels.swift in Sources */,
 				AA000037 /* RoutineFileService.swift in Sources */,
 				AA000038 /* RoutineImportExportSection.swift in Sources */,
+				AA000039 /* ExerciseImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -495,6 +500,7 @@
 				BB000034 /* RoutineFileModels.swift in Sources */,
 				BB000035 /* RoutineFileService.swift in Sources */,
 				BB000036 /* RoutineImportExportSection.swift in Sources */,
+				BB000037 /* ExerciseImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

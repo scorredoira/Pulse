@@ -25,6 +25,8 @@ enum Constants {
             .appendingPathComponent("pulse")
         #endif
         static let routinesFile = configDirectory.appendingPathComponent("routines.json")
+        static let routinesShareFile = configDirectory.appendingPathComponent("routines.pulse")
+        static let imagesDirectory = configDirectory.appendingPathComponent("images")
     }
 
     enum NotificationAction {
