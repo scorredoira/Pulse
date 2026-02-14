@@ -6,6 +6,7 @@ struct MenuBarContentView: View {
     @Environment(\.openWindow) private var openWindow
     @Query private var settings: [AppSettings]
     @Query(filter: #Predicate<Routine> { $0.isActive == true }) private var activeRoutines: [Routine]
+    @Query(sort: \Routine.sortOrder) private var allRoutines: [Routine]
 
     var timerService: TimerService
     var exerciseSessionService: ExerciseSessionService
@@ -51,16 +52,28 @@ struct MenuBarContentView: View {
                     .buttonStyle(WidePillButtonStyle(color: .accentColor))
                 } else {
                     VStack(spacing: Spacing.xs) {
-                        Button {
-                            startExerciseSession(for: activeRoutines.first(where: { $0.isDefault }) ?? activeRoutines.first)
+                        let availableRoutines = allRoutines.filter { !$0.exercises.isEmpty }
+                        let defaultRoutine = activeRoutines.first(where: { $0.isDefault })
+                            ?? activeRoutines.first
+                            ?? availableRoutines.first
+
+                        Menu {
+                            ForEach(availableRoutines, id: \.name) { routine in
+                                Button {
+                                    startExerciseSession(for: routine)
+                                } label: {
+                                    Text(routine.name)
+                                }
+                            }
                         } label: {
                             Label("Start Exercises", systemImage: "figure.run")
+                        } primaryAction: {
+                            startExerciseSession(for: defaultRoutine)
                         }
                         .buttonStyle(WidePillButtonStyle())
-                        .disabled(activeRoutines.isEmpty)
+                        .disabled(availableRoutines.isEmpty)
 
-                        if let routine = activeRoutines.first(where: { $0.isDefault }) ?? activeRoutines.first,
-                           !routine.exercises.isEmpty {
+                        if let routine = defaultRoutine {
                             Text("\(routine.name) — \(TimeFormatting.formatMinutesSeconds(routine.totalDurationSeconds))")
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)

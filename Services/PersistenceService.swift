@@ -30,10 +30,15 @@ struct PersistenceService {
         }
 
         // Seed default routine if none exist
-        let routineDescriptor = FetchDescriptor<Routine>()
+        let routineDescriptor = FetchDescriptor<Routine>(sortBy: [SortDescriptor(\Routine.name)])
         let existingRoutines = (try? context.fetch(routineDescriptor)) ?? []
         if existingRoutines.isEmpty {
             seedDefaultRoutine(context: context)
+        } else if existingRoutines.count > 1 && existingRoutines.allSatisfy({ $0.sortOrder == 0 }) {
+            // Migrate: assign sortOrder to existing routines upgraded from before sortOrder existed
+            for (index, routine) in existingRoutines.enumerated() {
+                routine.sortOrder = index
+            }
         }
     }
 
@@ -74,6 +79,7 @@ struct PersistenceService {
             isDefault: false,
             intervalMinutes: 30,
             isActive: true,
+            sortOrder: 0,
             exercises: [neckStretch, shoulderRolls, eyeRest]
         )
 
@@ -127,6 +133,7 @@ struct PersistenceService {
             isDefault: true,
             intervalMinutes: 90,
             isActive: true,
+            sortOrder: 1,
             exercises: [walk, fullStretch, plank, squats]
         )
 

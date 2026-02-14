@@ -18,7 +18,7 @@ final class RoutineFileService {
 
     func exportRoutines(from context: ModelContext) {
         do {
-            let descriptor = FetchDescriptor<Routine>()
+            let descriptor = FetchDescriptor<Routine>(sortBy: [SortDescriptor(\Routine.sortOrder)])
             let routines = try context.fetch(descriptor)
             let dtos = routines.map { $0.toDTO() }
             let file = RoutineFile(routines: dtos)
@@ -30,6 +30,7 @@ final class RoutineFileService {
             let dir = Constants.FilePaths.configDirectory
             try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
             try data.write(to: Constants.FilePaths.routinesFile, options: .atomic)
+            try data.write(to: Constants.FilePaths.routinesShareFile, options: .atomic)
 
             lastError = nil
             lastSuccess = "Exported \(routines.count) routine(s)"
@@ -53,6 +54,9 @@ final class RoutineFileService {
 
             try validate(file)
 
+            // Collect old image files before deleting routines
+            let oldImageFiles = collectImageFiles(from: context)
+
             // Delete existing routines
             let existing = try context.fetch(FetchDescriptor<Routine>())
             for routine in existing {
@@ -60,12 +64,15 @@ final class RoutineFileService {
             }
 
             // Insert new routines
-            for dto in file.routines {
-                let routine = dto.toModel()
+            for (index, dto) in file.routines.enumerated() {
+                let routine = dto.toModel(fallbackSortOrder: index)
                 context.insert(routine)
             }
 
             try context.save()
+
+            // Clean up old image files
+            deleteImageFiles(oldImageFiles)
 
             lastError = nil
             lastSuccess = "Imported \(file.routines.count) routine(s)"
@@ -102,17 +109,23 @@ final class RoutineFileService {
 
             try validate(file)
 
+            // Collect old image files before deleting routines
+            let oldImageFiles = collectImageFiles(from: context)
+
             let existing = try context.fetch(FetchDescriptor<Routine>())
             for routine in existing {
                 context.delete(routine)
             }
 
-            for dto in file.routines {
-                let routine = dto.toModel()
+            for (index, dto) in file.routines.enumerated() {
+                let routine = dto.toModel(fallbackSortOrder: index)
                 context.insert(routine)
             }
 
             try context.save()
+
+            // Clean up old image files
+            deleteImageFiles(oldImageFiles)
 
             lastError = nil
             lastSuccess = "Imported \(file.routines.count) routine(s)"
@@ -172,6 +185,29 @@ final class RoutineFileService {
         watchSource = nil
     }
 
+    // MARK: - Image Cleanup
+
+    private func collectImageFiles(from context: ModelContext) -> [String] {
+        guard let routines = try? context.fetch(FetchDescriptor<Routine>()) else { return [] }
+        return routines.flatMap { $0.exercises.flatMap { $0.imageFileNames } }
+    }
+
+    private func deleteImageFiles(_ fileNames: [String]) {
+        let imagesDir = Constants.FilePaths.imagesDirectory
+        for fileName in fileNames {
+            let url = imagesDir.appendingPathComponent(fileName)
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
+
+    static func deleteImageFiles(for exercise: Exercise) {
+        let imagesDir = Constants.FilePaths.imagesDirectory
+        for fileName in exercise.imageFileNames {
+            let url = imagesDir.appendingPathComponent(fileName)
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
+
     // MARK: - Validation
 
     private struct ValidationError: Error {
@@ -190,8 +226,11 @@ final class RoutineFileService {
                 guard !exercise.name.trimmingCharacters(in: .whitespaces).isEmpty else {
                     throw ValidationError(message: "Exercise \(j + 1) in \"\(routine.name)\" has an empty name.")
                 }
-                guard exercise.durationSeconds >= 1 else {
-                    throw ValidationError(message: "\"\(exercise.name)\" in \"\(routine.name)\" must have duration >= 1 second.")
+                let isRepBased = (exercise.reps ?? 0) > 0
+                if !isRepBased {
+                    guard exercise.durationSeconds >= 1 else {
+                        throw ValidationError(message: "\"\(exercise.name)\" in \"\(routine.name)\" must have duration >= 1 second.")
+                    }
                 }
                 guard exercise.sets >= 1 else {
                     throw ValidationError(message: "\"\(exercise.name)\" in \"\(routine.name)\" must have sets >= 1.")
