@@ -232,6 +232,11 @@ struct RoutineSettingsTab: View {
                         get: { routine.isActive },
                         set: { routine.isActive = $0 }
                     ))
+
+                    Toggle("Manual exercise start", isOn: Binding(
+                        get: { routine.manualExerciseStart },
+                        set: { routine.manualExerciseStart = $0 }
+                    ))
                 } header: {
                     Text("Total: \(TimeFormatting.formatMinutesSeconds(routine.totalDurationSeconds))")
                 }
@@ -419,6 +424,11 @@ struct RoutineSettingsTab: View {
                     get: { routine.isActive },
                     set: { routine.isActive = $0 }
                 ))
+
+                Toggle("Manual exercise start", isOn: Binding(
+                    get: { routine.manualExerciseStart },
+                    set: { routine.manualExerciseStart = $0 }
+                ))
             }
 
             Section {
@@ -433,39 +443,36 @@ struct RoutineSettingsTab: View {
     }
 
     private func exerciseRow(_ exercise: Exercise, in routine: Routine) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: exercise.iconName)
-                .font(.title3)
-                .frame(width: 28)
-                .foregroundStyle(.accent)
+        Button {
+            openExerciseForm(exercise: exercise)
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: exercise.iconName)
+                    .font(.title3)
+                    .frame(width: 28)
+                    .foregroundStyle(.accent)
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(exercise.name)
-                    .font(.body)
-                    .fontWeight(.medium)
-                Text(exerciseSummary(exercise))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(exercise.name)
+                        .font(.body)
+                        .fontWeight(.medium)
+                    Text(exerciseSummary(exercise))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Button(role: .destructive) {
+                    deleteExercise(exercise, from: routine)
+                } label: {
+                    Image(systemName: "trash")
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
             }
-
-            Spacer()
-
-            Button {
-                openExerciseForm(exercise: exercise)
-            } label: {
-                Image(systemName: "pencil")
-            }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
-
-            Button(role: .destructive) {
-                deleteExercise(exercise, from: routine)
-            } label: {
-                Image(systemName: "trash")
-            }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
         }
+        .buttonStyle(.plain)
         .swipeActions(edge: .trailing) {
             Button(role: .destructive) {
                 deleteExercise(exercise, from: routine)

@@ -6,6 +6,7 @@ enum ExerciseSessionState {
     case preparing
     case running
     case paused
+    case waitingToStart
     case completed
 }
 
@@ -24,6 +25,7 @@ final class ExerciseSessionService {
     var remainingSeconds: Int = 0
     var exercises: [Exercise] = []
     var completedLogs: [ExerciseLog] = []
+    var manualExerciseStart: Bool = false
 
     var currentExercise: Exercise? {
         guard currentExerciseIndex < exercises.count else { return nil }
@@ -48,6 +50,7 @@ final class ExerciseSessionService {
     var totalExercises: Int { exercises.count }
 
     var preparingCountdown: Int = 5
+    var preparingPaused: Bool = false
 
     var audioService: AudioGuidanceService?
     var onSessionComplete: (([ExerciseLog]) -> Void)?
@@ -57,9 +60,10 @@ final class ExerciseSessionService {
     private var timer: Timer?
     private var preparingTimer: Timer?
 
-    func startSession(with exercises: [Exercise], audioService: AudioGuidanceService) {
+    func startSession(with exercises: [Exercise], audioService: AudioGuidanceService, manualExerciseStart: Bool = false) {
         self.exercises = exercises
         self.audioService = audioService
+        self.manualExerciseStart = manualExerciseStart
         self.completedLogs = []
         self.currentExerciseIndex = 0
         self.currentSet = 1
@@ -83,18 +87,34 @@ final class ExerciseSessionService {
 
     func startNow() {
         stopPreparingTimer()
+        preparingPaused = false
         state = .running
         announceAndStartExercise()
     }
 
+    func pausePreparing() {
+        guard state == .preparing, !preparingPaused else { return }
+        preparingPaused = true
+        stopPreparingTimer()
+    }
+
+    func resumePreparing() {
+        guard state == .preparing, preparingPaused else { return }
+        preparingPaused = false
+        startPreparingCountdown()
+    }
+
     private func startPreparingCountdown() {
         stopPreparingTimer()
+        audioService?.announceCountdown(preparingCountdown)
         preparingTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self else { return }
             if self.preparingCountdown > 1 {
                 self.preparingCountdown -= 1
+                self.audioService?.announceCountdown(self.preparingCountdown)
             } else {
                 self.stopPreparingTimer()
+                self.preparingPaused = false
                 self.state = .running
                 self.announceAndStartExercise()
             }
@@ -291,11 +311,19 @@ final class ExerciseSessionService {
         }
     }
 
+    func startCurrentExercise() {
+        guard state == .waitingToStart else { return }
+        state = .running
+        announceAndStartExercise()
+    }
+
     private func moveToNextExercise() {
         currentExerciseIndex += 1
         currentSet = 1
         if currentExerciseIndex >= exercises.count {
             finishSession()
+        } else if manualExerciseStart {
+            state = .waitingToStart
         } else {
             announceAndStartExercise()
         }

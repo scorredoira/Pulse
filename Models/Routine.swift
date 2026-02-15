@@ -8,6 +8,7 @@ final class Routine {
     var intervalMinutes: Int = 45
     var isActive: Bool = true
     var sortOrder: Int = 0
+    var manualExerciseStart: Bool = false
 
     @Relationship(deleteRule: .cascade)
     var exercises: [Exercise]

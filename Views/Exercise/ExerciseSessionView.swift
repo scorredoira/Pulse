@@ -40,7 +40,7 @@ struct ExerciseSessionView: View {
                     Text("\(sessionService.preparingCountdown)")
                         .font(.system(size: 72, weight: .bold, design: .rounded))
                         .monospacedDigit()
-                        .foregroundStyle(.green)
+                        .foregroundStyle(sessionService.preparingPaused ? .orange : .green)
                         .contentTransition(.numericText(countsDown: true))
                         .animation(.default, value: sessionService.preparingCountdown)
 
@@ -52,22 +52,83 @@ struct ExerciseSessionView: View {
                     .buttonStyle(PillButtonStyle(color: .green))
 
                     HStack(spacing: Spacing.sm) {
-                        postponeButton(minutes: 1)
-                        postponeButton(minutes: 2)
-                        postponeButton(minutes: 5)
-                    }
+                        if sessionService.preparingPaused {
+                            Button {
+                                sessionService.resumePreparing()
+                            } label: {
+                                Label("Resume", systemImage: "play.fill")
+                            }
+                            .buttonStyle(PillButtonStyle(color: .green))
+                        } else {
+                            Button {
+                                sessionService.pausePreparing()
+                            } label: {
+                                Label("Pause", systemImage: "pause.fill")
+                            }
+                            .buttonStyle(PillButtonStyle(color: .orange))
+                        }
 
-                    Button {
-                        sessionService.cancelSession()
-                        dismiss()
-                    } label: {
-                        Label("Skip", systemImage: "forward.end.fill")
+                        Button {
+                            sessionService.cancelSession()
+                            dismiss()
+                        } label: {
+                            Label("Skip", systemImage: "forward.end.fill")
+                        }
+                        .buttonStyle(PillButtonStyle(color: .secondary))
                     }
-                    .buttonStyle(PillButtonStyle(color: .secondary))
 
                     Spacer()
                 }
                 .transition(.opacity)
+
+            case .waitingToStart:
+                if let exercise = sessionService.currentExercise {
+                    VStack(spacing: Spacing.lg) {
+                        Spacer()
+
+                        Image(systemName: exercise.iconName)
+                            .font(.system(size: 48))
+                            .foregroundStyle(.accent)
+
+                        Text("Up Next")
+                            .font(.title2.bold())
+
+                        Text(exercise.name)
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
+
+                        Text("Exercise \(sessionService.currentExerciseIndex + 1) of \(sessionService.totalExercises)")
+                            .font(.subheadline)
+                            .foregroundStyle(.tertiary)
+
+                        Button {
+                            sessionService.startCurrentExercise()
+                        } label: {
+                            Label("Start Exercise", systemImage: "play.fill")
+                        }
+                        .buttonStyle(PillButtonStyle(color: .green))
+
+                        HStack(spacing: Spacing.sm) {
+                            Button {
+                                sessionService.skipCurrentExercise()
+                            } label: {
+                                Label("Skip", systemImage: "forward.fill")
+                            }
+                            .buttonStyle(PillButtonStyle(color: .blue))
+
+                            Button {
+                                sessionService.cancelSession()
+                                dismiss()
+                            } label: {
+                                Label("Cancel", systemImage: "xmark")
+                            }
+                            .buttonStyle(PillButtonStyle(color: .red))
+                        }
+
+                        Spacer()
+                    }
+                    .transition(.opacity)
+                }
 
             case .running, .paused:
                 if let exercise = sessionService.currentExercise {
@@ -142,15 +203,6 @@ struct ExerciseSessionView: View {
         #endif
     }
 
-    private func postponeButton(minutes: Int) -> some View {
-        Button {
-            sessionService.postpone(minutes: minutes)
-            dismiss()
-        } label: {
-            Text("+\(minutes) min")
-        }
-        .buttonStyle(PillButtonStyle(color: .orange))
-    }
 }
 
 #if os(macOS)

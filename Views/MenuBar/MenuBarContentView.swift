@@ -42,7 +42,7 @@ struct MenuBarContentView: View {
                 )
 
                 // Start exercises / Show exercise window
-                if exerciseSessionService.state == .running || exerciseSessionService.state == .paused {
+                if exerciseSessionService.state == .running || exerciseSessionService.state == .paused || exerciseSessionService.state == .waitingToStart {
                     Button {
                         NSApplication.shared.activate()
                         openWindow(id: Constants.WindowID.exerciseSession)
@@ -268,7 +268,7 @@ struct MenuBarContentView: View {
             snoozeExercises(minutes: minutes)
         }
 
-        exerciseSessionService.startSession(with: exercises, audioService: audioService)
+        exerciseSessionService.startSession(with: exercises, audioService: audioService, manualExerciseStart: routine.manualExerciseStart)
 
         DispatchQueue.main.async {
             NSApplication.shared.activate()

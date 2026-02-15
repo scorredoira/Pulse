@@ -90,7 +90,7 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: Spacing.lg) {
                         // Active exercise session banner
-                        if exerciseSessionService.state == .running || exerciseSessionService.state == .paused {
+                        if exerciseSessionService.state == .running || exerciseSessionService.state == .paused || exerciseSessionService.state == .waitingToStart {
                             Button {
                                 showExerciseSession = true
                             } label: {
@@ -181,62 +181,63 @@ struct HomeView: View {
     }
 
     private func routineRow(_ routine: Routine) -> some View {
-        HStack(spacing: Spacing.md) {
-            // Icon
-            Image(systemName: routine.exercises.first?.iconName ?? "figure.walk")
-                .font(.title2)
-                .foregroundStyle(.accent)
-                .frame(width: 40, height: 40)
-                .background(Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: CornerRadius.medium, style: .continuous))
+        Button {
+            startExerciseSession(for: routine)
+        } label: {
+            HStack(spacing: Spacing.md) {
+                // Icon
+                Image(systemName: routine.exercises.first?.iconName ?? "figure.walk")
+                    .font(.title2)
+                    .foregroundStyle(.accent)
+                    .frame(width: 40, height: 40)
+                    .background(Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: CornerRadius.medium, style: .continuous))
 
-            // Info
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: Spacing.xs) {
-                    Text(routine.name)
-                        .font(.body.weight(.semibold))
-                        .lineLimit(1)
+                // Info
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: Spacing.xs) {
+                        Text(routine.name)
+                            .font(.body.weight(.semibold))
+                            .lineLimit(1)
 
-                    if routine.isActive {
-                        Image(systemName: "timer")
-                            .font(.caption2)
-                            .foregroundStyle(.orange)
+                        if routine.isActive {
+                            Image(systemName: "timer")
+                                .font(.caption2)
+                                .foregroundStyle(.orange)
+                        }
                     }
+
+                    Text(routineSubtitle(routine))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
                 }
 
-                Text(routineSubtitle(routine))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-            }
+                Spacer()
 
-            Spacer()
+                // Running timer indicator
+                if let rt = timerService.routineTimers.first(where: { $0.id == routine.name }),
+                   rt.state == .running || rt.state == .paused {
+                    Text(rt.displayString)
+                        .font(.system(.callout, design: .rounded, weight: .semibold))
+                        .monospacedDigit()
+                        .foregroundStyle(rt.state == .paused ? .orange : .accentColor)
+                        .contentTransition(.numericText(countsDown: true))
+                        .animation(.default, value: rt.remainingSeconds)
+                }
 
-            // Running timer indicator
-            if let rt = timerService.routineTimers.first(where: { $0.id == routine.name }),
-               rt.state == .running || rt.state == .paused {
-                Text(rt.displayString)
-                    .font(.system(.callout, design: .rounded, weight: .semibold))
-                    .monospacedDigit()
-                    .foregroundStyle(rt.state == .paused ? .orange : .accentColor)
-                    .contentTransition(.numericText(countsDown: true))
-                    .animation(.default, value: rt.remainingSeconds)
-            }
-
-            // Play button
-            Button {
-                startExerciseSession(for: routine)
-            } label: {
+                // Play icon
                 Image(systemName: "play.fill")
                     .font(.body)
                     .foregroundStyle(.white)
                     .frame(width: 36, height: 36)
                     .background(.accent, in: Circle())
             }
-            .disabled(routine.exercises.isEmpty)
-            .opacity(routine.exercises.isEmpty ? 0.4 : 1)
+            .padding(Spacing.md)
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: CornerRadius.large, style: .continuous))
         }
-        .padding(Spacing.md)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: CornerRadius.large, style: .continuous))
+        .buttonStyle(.plain)
+        .disabled(routine.exercises.isEmpty)
+        .opacity(routine.exercises.isEmpty ? 0.4 : 1)
     }
 
     private func routineSubtitle(_ routine: Routine) -> String {
@@ -405,7 +406,7 @@ struct HomeView: View {
             exerciseRoutineId = nil
         }
 
-        exerciseSessionService.startSession(with: exercises, audioService: audioService)
+        exerciseSessionService.startSession(with: exercises, audioService: audioService, manualExerciseStart: routine.manualExerciseStart)
         showExerciseSession = true
     }
 
