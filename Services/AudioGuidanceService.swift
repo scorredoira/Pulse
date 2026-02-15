@@ -15,13 +15,32 @@ final class AudioGuidanceService {
 
     var soundEnabled: Bool = true
     var voiceGuidanceEnabled: Bool = true
+    var repCountingEnabled: Bool = true
     var speechRate: Float = 0.5
     var speechVolume: Float = 1.0
 
     init() {
         speechDelegate = SpeechDelegate(service: self)
         synthesizer.delegate = speechDelegate
+        #if os(iOS)
+        configureAudioSession()
+        #endif
     }
+
+    #if os(iOS)
+    private func configureAudioSession() {
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, mode: .spokenAudio, options: [.mixWithOthers, .duckOthers])
+    }
+
+    private func activateAudioSession() {
+        try? AVAudioSession.sharedInstance().setActive(true)
+    }
+
+    fileprivate func deactivateAudioSession() {
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+    }
+    #endif
 
     func announceExercise(name: String, duration: Int) {
         guard voiceGuidanceEnabled else { return }
@@ -46,6 +65,11 @@ final class AudioGuidanceService {
     func announceRest(duration: Int) {
         guard voiceGuidanceEnabled else { return }
         speak("Rest. \(TimeFormatting.spokenDuration(duration)).")
+    }
+
+    func announceRepCount(_ rep: Int) {
+        guard voiceGuidanceEnabled, repCountingEnabled else { return }
+        speak("\(rep)")
     }
 
     func announceCountdown(_ seconds: Int) {
@@ -97,6 +121,9 @@ final class AudioGuidanceService {
 
     private func speak(_ text: String) {
         synthesizer.stopSpeaking(at: .immediate)
+        #if os(iOS)
+        activateAudioSession()
+        #endif
         let utterance = AVSpeechUtterance(string: text)
         utterance.rate = speechRate
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
@@ -116,6 +143,9 @@ private final class SpeechDelegate: NSObject, AVSpeechSynthesizerDelegate {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         DispatchQueue.main.async {
             self.service?.isSpeaking = false
+            #if os(iOS)
+            self.service?.deactivateAudioSession()
+            #endif
         }
     }
 }

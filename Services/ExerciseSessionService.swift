@@ -260,7 +260,18 @@ final class ExerciseSessionService {
             remainingSeconds -= 1
 
             let r = remainingSeconds
-            if r == 10 {
+
+            // Rep counting for rep-based exercises
+            if phase == .exercise, let exercise = currentExercise,
+               exercise.reps > 0, exercise.secondsPerRep > 0 {
+                let elapsed = exercise.effectiveDurationSeconds - r
+                if elapsed > 0, elapsed % exercise.secondsPerRep == 0 {
+                    let rep = elapsed / exercise.secondsPerRep + 1
+                    if rep <= exercise.reps {
+                        audioService?.announceRepCount(rep)
+                    }
+                }
+            } else if r == 10 {
                 audioService?.announceCountdown(r)
             } else if r <= 5 && r > 0 {
                 audioService?.announceCountdown(r)
@@ -325,6 +336,7 @@ final class ExerciseSessionService {
         } else if manualExerciseStart {
             state = .waitingToStart
         } else {
+            state = .running
             announceAndStartExercise()
         }
     }

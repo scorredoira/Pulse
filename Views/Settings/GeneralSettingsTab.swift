@@ -27,6 +27,10 @@ struct GeneralSettingsTab: View {
                     ))
 
                     if settings.voiceGuidanceEnabled {
+                        Toggle("Count reps aloud", isOn: Binding(
+                            get: { settings.repCountingEnabled },
+                            set: { settings.repCountingEnabled = $0 }
+                        ))
                         HStack {
                             Text("Speech rate")
                             Slider(
@@ -106,7 +110,9 @@ struct GeneralSettingsTab: View {
                 try SMAppService.mainApp.unregister()
             }
         } catch {
+            #if DEBUG
             print("Failed to update launch at login: \(error)")
+            #endif
         }
     }
     #endif

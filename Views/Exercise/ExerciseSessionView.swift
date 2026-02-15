@@ -8,6 +8,15 @@ struct ExerciseSessionView: View {
     @AppStorage("exerciseWindowAlwaysOnTop") private var alwaysOnTop = false
     var sessionService: ExerciseSessionService
 
+    private var sessionActive: Bool {
+        switch sessionService.state {
+        case .preparing, .running, .paused, .waitingToStart:
+            return true
+        case .idle, .completed:
+            return false
+        }
+    }
+
     var body: some View {
         VStack {
             switch sessionService.state {
@@ -23,18 +32,26 @@ struct ExerciseSessionView: View {
                 VStack(spacing: Spacing.lg) {
                     Spacer()
 
-                    Image(systemName: "figure.run")
-                        .font(.system(size: 48))
-                        .foregroundStyle(.accent)
-                        .symbolEffect(.bounce)
-
-                    Text("Get Ready!")
-                        .font(.title.bold())
+                    Text("GET READY!")
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                        .tracking(2)
 
                     if let exercise = sessionService.currentExercise {
-                        Text("First up: \(exercise.name)")
-                            .font(.headline)
-                            .foregroundStyle(.secondary)
+                        if !exercise.imageFileNames.isEmpty {
+                            ExerciseImageView(
+                                imageFileNames: exercise.imageFileNames,
+                                isAnimating: true
+                            )
+                        } else {
+                            Image(systemName: exercise.iconName)
+                                .font(.system(size: 48))
+                                .foregroundStyle(.accent)
+                                .symbolEffect(.bounce)
+                        }
+
+                        Text(exercise.name)
+                            .font(.title.bold())
                     }
 
                     Text("\(sessionService.preparingCountdown)")
@@ -86,16 +103,24 @@ struct ExerciseSessionView: View {
                     VStack(spacing: Spacing.lg) {
                         Spacer()
 
-                        Image(systemName: exercise.iconName)
-                            .font(.system(size: 48))
-                            .foregroundStyle(.accent)
+                        Text("UP NEXT")
+                            .font(.headline)
+                            .foregroundStyle(.secondary)
+                            .tracking(2)
 
-                        Text("Up Next")
-                            .font(.title2.bold())
+                        if !exercise.imageFileNames.isEmpty {
+                            ExerciseImageView(
+                                imageFileNames: exercise.imageFileNames,
+                                isAnimating: true
+                            )
+                        } else {
+                            Image(systemName: exercise.iconName)
+                                .font(.system(size: 48))
+                                .foregroundStyle(.accent)
+                        }
 
                         Text(exercise.name)
-                            .font(.title3)
-                            .foregroundStyle(.secondary)
+                            .font(.title.bold())
 
                         Text("Exercise \(sessionService.currentExerciseIndex + 1) of \(sessionService.totalExercises)")
                             .font(.subheadline)
@@ -199,7 +224,7 @@ struct ExerciseSessionView: View {
         .animation(.easeInOut(duration: 0.3), value: sessionService.state)
         #if os(macOS)
         .frame(minWidth: 450, minHeight: 550)
-        .background(WindowLevelAccessor(alwaysOnTop: alwaysOnTop))
+        .background(WindowLevelAccessor(sessionActive: sessionActive, alwaysOnTop: alwaysOnTop))
         #endif
     }
 
@@ -207,19 +232,27 @@ struct ExerciseSessionView: View {
 
 #if os(macOS)
 private struct WindowLevelAccessor: NSViewRepresentable {
+    let sessionActive: Bool
     let alwaysOnTop: Bool
+
+    private var targetLevel: NSWindow.Level {
+        if sessionActive {
+            return .statusBar
+        }
+        return alwaysOnTop ? .floating : .normal
+    }
 
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
-            view.window?.level = alwaysOnTop ? .floating : .normal
+            view.window?.level = targetLevel
         }
         return view
     }
 
     func updateNSView(_ nsView: NSView, context: Context) {
         DispatchQueue.main.async {
-            nsView.window?.level = alwaysOnTop ? .floating : .normal
+            nsView.window?.level = targetLevel
         }
     }
 }

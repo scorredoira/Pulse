@@ -15,7 +15,9 @@ final class NotificationService: NSObject {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error {
+                #if DEBUG
                 print("Notification permission error: \(error)")
+                #endif
             }
         }
         center.delegate = self

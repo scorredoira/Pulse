@@ -10,6 +10,7 @@ final class AppSettings {
     var speechVolume: Float
     var healthKitEnabled: Bool
     var launchAtLogin: Bool
+    var repCountingEnabled: Bool
 
     init(
         workIntervalMinutes: Int = 45,
@@ -18,7 +19,8 @@ final class AppSettings {
         speechRate: Float = 0.5,
         speechVolume: Float = 1.0,
         healthKitEnabled: Bool = false,
-        launchAtLogin: Bool = false
+        launchAtLogin: Bool = false,
+        repCountingEnabled: Bool = true
     ) {
         self.workIntervalMinutes = workIntervalMinutes
         self.soundEnabled = soundEnabled
@@ -27,5 +29,6 @@ final class AppSettings {
         self.speechVolume = speechVolume
         self.healthKitEnabled = healthKitEnabled
         self.launchAtLogin = launchAtLogin
+        self.repCountingEnabled = repCountingEnabled
     }
 }

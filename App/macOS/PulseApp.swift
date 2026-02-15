@@ -37,12 +37,17 @@ struct PulseApp: App {
             .modelContainer(container)
             .onAppear {
                 if screenActivityService == nil {
-                    let service = ScreenActivityService(
-                        timerService: timerService,
-                        exerciseSessionService: exerciseSessionService
-                    )
+                    let service = ScreenActivityService(timerService: timerService)
                     service.startMonitoring()
                     screenActivityService = service
+                }
+            }
+            .onChange(of: exerciseSessionService.state) {
+                switch exerciseSessionService.state {
+                case .preparing, .running, .paused, .waitingToStart:
+                    screenActivityService?.preventSleep()
+                case .idle, .completed:
+                    screenActivityService?.allowSleep()
                 }
             }
         } label: {
@@ -133,6 +138,7 @@ struct PulseApp: App {
         if let settings = try? container.mainContext.fetch(settingsDescriptor).first {
             audioService.soundEnabled = settings.soundEnabled
             audioService.voiceGuidanceEnabled = settings.voiceGuidanceEnabled
+            audioService.repCountingEnabled = settings.repCountingEnabled
             audioService.speechRate = settings.speechRate
             audioService.speechVolume = settings.speechVolume
         }

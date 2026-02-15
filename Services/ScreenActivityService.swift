@@ -1,20 +1,46 @@
 import Foundation
 import AppKit
+import IOKit
+import IOKit.pwr_mgt
 
 @Observable
 final class ScreenActivityService {
     private let timerService: TimerService
-    private let exerciseSessionService: ExerciseSessionService
 
     private var timerWasPausedByScreen = false
-    private var exerciseWasPausedByScreen = false
 
     private var observers: [NSObjectProtocol] = []
 
-    init(timerService: TimerService, exerciseSessionService: ExerciseSessionService) {
+    private var sleepAssertionID: IOPMAssertionID = 0
+    private(set) var isSleepPrevented: Bool = false
+
+    init(timerService: TimerService) {
         self.timerService = timerService
-        self.exerciseSessionService = exerciseSessionService
     }
+
+    // MARK: - Sleep prevention
+
+    func preventSleep() {
+        guard !isSleepPrevented else { return }
+        let reason = "Pulse exercise session in progress" as CFString
+        let result = IOPMAssertionCreateWithName(
+            kIOPMAssertionTypePreventUserIdleDisplaySleep as CFString,
+            IOPMAssertionLevel(kIOPMAssertionLevelOn),
+            reason,
+            &sleepAssertionID
+        )
+        if result == kIOReturnSuccess {
+            isSleepPrevented = true
+        }
+    }
+
+    func allowSleep() {
+        guard isSleepPrevented else { return }
+        IOPMAssertionRelease(sleepAssertionID)
+        isSleepPrevented = false
+    }
+
+    // MARK: - Screen monitoring
 
     func startMonitoring() {
         let workspace = NSWorkspace.shared.notificationCenter
@@ -70,6 +96,7 @@ final class ScreenActivityService {
             distributed.removeObserver(observer)
         }
         observers.removeAll()
+        allowSleep()
     }
 
     private func handleScreenInactive() {
@@ -77,22 +104,12 @@ final class ScreenActivityService {
             timerService.pause()
             timerWasPausedByScreen = true
         }
-
-        if exerciseSessionService.state == .running {
-            exerciseSessionService.pause()
-            exerciseWasPausedByScreen = true
-        }
     }
 
     private func handleScreenActive() {
         if timerWasPausedByScreen {
             timerService.resume()
             timerWasPausedByScreen = false
-        }
-
-        if exerciseWasPausedByScreen {
-            exerciseSessionService.resume()
-            exerciseWasPausedByScreen = false
         }
     }
 

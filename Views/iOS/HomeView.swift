@@ -64,7 +64,11 @@ struct HomeView: View {
             setupTimerCallback()
         }
         .onChange(of: exerciseSessionService.state) {
-            if exerciseSessionService.state == .idle || exerciseSessionService.state == .completed {
+            switch exerciseSessionService.state {
+            case .preparing, .running, .paused, .waitingToStart, .completed:
+                UIApplication.shared.isIdleTimerDisabled = exerciseSessionService.state != .completed
+            case .idle:
+                UIApplication.shared.isIdleTimerDisabled = false
                 showExerciseSession = false
             }
         }
@@ -389,6 +393,7 @@ struct HomeView: View {
         if let settings = appSettings {
             audioService.soundEnabled = settings.soundEnabled
             audioService.voiceGuidanceEnabled = settings.voiceGuidanceEnabled
+            audioService.repCountingEnabled = settings.repCountingEnabled
             audioService.speechRate = settings.speechRate
             audioService.speechVolume = settings.speechVolume
         }

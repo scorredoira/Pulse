@@ -17,7 +17,16 @@ struct PersistenceService {
             isStoredInMemoryOnly: false
         )
 
-        return try ModelContainer(for: schema, configurations: [config])
+        do {
+            return try ModelContainer(for: schema, configurations: [config])
+        } catch {
+            // Store corrupted — delete and recreate
+            let url = config.url
+            let related = [url, url.deletingPathExtension().appendingPathExtension("store-shm"),
+                           url.deletingPathExtension().appendingPathExtension("store-wal")]
+            for file in related { try? FileManager.default.removeItem(at: file) }
+            return try ModelContainer(for: schema, configurations: [config])
+        }
     }
 
     @MainActor

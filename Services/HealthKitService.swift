@@ -37,7 +37,9 @@ final class HealthKitService {
             }
             return true
         } catch {
+            #if DEBUG
             print("HealthKit authorization failed: \(error)")
+            #endif
             return false
         }
         #else
@@ -66,7 +68,9 @@ final class HealthKitService {
             try await healthStore.save(workout)
             return true
         } catch {
+            #if DEBUG
             print("HealthKit save error: \(error)")
+            #endif
             return false
         }
         #else

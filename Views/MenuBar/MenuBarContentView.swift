@@ -230,23 +230,17 @@ struct MenuBarContentView: View {
     }
 
     private func startExerciseSession(for routine: Routine?) {
-        guard let routine else {
-            print("[Pulse] No routine found for exercise session")
-            return
-        }
+        guard let routine else { return }
         let exercises = routine.sortedExercises
-        guard !exercises.isEmpty else {
-            print("[Pulse] Routine '\(routine.name)' has no exercises")
-            return
-        }
+        guard !exercises.isEmpty else { return }
 
         let routineId = routine.name
-        print("[Pulse] Starting session with \(exercises.count) exercises from '\(routine.name)'")
 
         // Configure audio from settings
         if let settings = appSettings {
             audioService.soundEnabled = settings.soundEnabled
             audioService.voiceGuidanceEnabled = settings.voiceGuidanceEnabled
+            audioService.repCountingEnabled = settings.repCountingEnabled
             audioService.speechRate = settings.speechRate
             audioService.speechVolume = settings.speechVolume
         }

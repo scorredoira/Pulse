@@ -63,37 +63,21 @@ enum IconGenerator {
             let renderer = ImageRenderer(content: AppIconView(size: pixelSize))
             renderer.scale = 1.0
 
-            guard let cgImage = renderer.cgImage else {
-                print("[IconGenerator] Failed to render \(iconSize.filename)")
-                continue
-            }
+            guard let cgImage = renderer.cgImage else { continue }
 
             let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
             bitmapRep.size = NSSize(width: pixelSize, height: pixelSize)
 
-            guard let pngData = bitmapRep.representation(using: .png, properties: [:]) else {
-                print("[IconGenerator] Failed to create PNG for \(iconSize.filename)")
-                continue
-            }
+            guard let pngData = bitmapRep.representation(using: .png, properties: [:]) else { continue }
 
             let fileURL = directory.appendingPathComponent(iconSize.filename)
-            do {
-                try pngData.write(to: fileURL)
-                print("[IconGenerator] Generated \(iconSize.filename) (\(iconSize.pixels)px)")
-            } catch {
-                print("[IconGenerator] Failed to write \(iconSize.filename): \(error)")
-            }
+            try? pngData.write(to: fileURL)
         }
 
         // Generate Contents.json
         let contents = generateContentsJSON()
         let contentsURL = directory.appendingPathComponent("Contents.json")
-        do {
-            try contents.write(to: contentsURL, atomically: true, encoding: .utf8)
-            print("[IconGenerator] Generated Contents.json")
-        } catch {
-            print("[IconGenerator] Failed to write Contents.json: \(error)")
-        }
+        try? contents.write(to: contentsURL, atomically: true, encoding: .utf8)
     }
 
     private static func generateContentsJSON() -> String {
