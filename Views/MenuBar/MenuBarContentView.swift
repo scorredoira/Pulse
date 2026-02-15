@@ -13,12 +13,10 @@ struct MenuBarContentView: View {
     var audioService: AudioGuidanceService
     var healthKitService: HealthKitService
 
-    @State private var exerciseRoutineId: String?
-
     private var appSettings: AppSettings? { settings.first }
 
     private var exerciseRoutine: Routine? {
-        guard let routineId = exerciseRoutineId ?? timerService.activeExerciseRoutineId else { return nil }
+        guard let routineId = timerService.activeExerciseRoutineId else { return nil }
         return activeRoutines.first { $0.name == routineId }
     }
 
@@ -119,7 +117,7 @@ struct MenuBarContentView: View {
         .frame(width: 350)
         .background(.ultraThinMaterial)
         .onAppear {
-            setupTimerCallback()
+            setupNotificationCallbacks()
         }
     }
 
@@ -191,16 +189,7 @@ struct MenuBarContentView: View {
         timerService.startAll(routines: routines)
     }
 
-    private func setupTimerCallback() {
-        timerService.onRoutineTimerComplete = { [self] routineId in
-            exerciseRoutineId = routineId
-            audioService.announceWorkIntervalComplete()
-            audioService.playBeep()
-            // Start exercise session immediately — no countdown, no notification
-            let routine = activeRoutines.first { $0.name == routineId }
-            startExerciseSession(for: routine)
-        }
-
+    private func setupNotificationCallbacks() {
         NotificationService.shared.onStartExercise = { [self] in
             startExerciseSession(for: exerciseRoutine)
         }
@@ -220,12 +209,10 @@ struct MenuBarContentView: View {
         guard let routineId = timerService.activeExerciseRoutineId else { return }
         let interval = activeRoutines.first(where: { $0.name == routineId })?.intervalMinutes
         timerService.restartAndResumeOthers(routineId: routineId, newIntervalMinutes: interval)
-        exerciseRoutineId = nil
     }
 
     private func snoozeExercises(minutes: Int) {
         timerService.snooze(seconds: minutes * 60)
-        exerciseRoutineId = nil
         NotificationService.shared.sendSnoozeConfirmation(minutes: minutes)
     }
 
@@ -249,13 +236,11 @@ struct MenuBarContentView: View {
             saveSession(logs: logs, routineId: routineId)
             let interval = activeRoutines.first(where: { $0.name == routineId })?.intervalMinutes
             timerService.restartAndResumeOthers(routineId: routineId, newIntervalMinutes: interval)
-            exerciseRoutineId = nil
         }
 
         exerciseSessionService.onSessionCancel = {
             let interval = activeRoutines.first(where: { $0.name == routineId })?.intervalMinutes
             timerService.restartAndResumeOthers(routineId: routineId, newIntervalMinutes: interval)
-            exerciseRoutineId = nil
         }
 
         exerciseSessionService.onPostpone = { [self] minutes in
@@ -265,8 +250,9 @@ struct MenuBarContentView: View {
         exerciseSessionService.startSession(with: exercises, audioService: audioService, manualExerciseStart: routine.manualExerciseStart)
 
         DispatchQueue.main.async {
-            NSApplication.shared.activate()
+            NSApplication.shared.setActivationPolicy(.regular)
             openWindow(id: Constants.WindowID.exerciseSession)
+            NSApplication.shared.activate()
         }
     }
 

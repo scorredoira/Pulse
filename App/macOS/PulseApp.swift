@@ -119,6 +119,16 @@ struct PulseApp: App {
 
     private func setupTimerCallback() {
         timerService.onRoutineTimerComplete = { [self] routineId in
+            // Load audio settings before playing alerts
+            let settingsDescriptor = FetchDescriptor<AppSettings>()
+            if let settings = try? container.mainContext.fetch(settingsDescriptor).first {
+                audioService.soundEnabled = settings.soundEnabled
+                audioService.voiceGuidanceEnabled = settings.voiceGuidanceEnabled
+                audioService.repCountingEnabled = settings.repCountingEnabled
+                audioService.speechRate = settings.speechRate
+                audioService.speechVolume = settings.speechVolume
+            }
+
             audioService.announceWorkIntervalComplete()
             audioService.playBeep()
             startExerciseFromApp(routineId: routineId)
@@ -132,16 +142,6 @@ struct PulseApp: App {
               !routine.sortedExercises.isEmpty else { return }
 
         let exercises = routine.sortedExercises
-
-        // Configure audio from settings
-        let settingsDescriptor = FetchDescriptor<AppSettings>()
-        if let settings = try? container.mainContext.fetch(settingsDescriptor).first {
-            audioService.soundEnabled = settings.soundEnabled
-            audioService.voiceGuidanceEnabled = settings.voiceGuidanceEnabled
-            audioService.repCountingEnabled = settings.repCountingEnabled
-            audioService.speechRate = settings.speechRate
-            audioService.speechVolume = settings.speechVolume
-        }
 
         exerciseSessionService.onSessionComplete = { logs in
             let session = WorkSession(
@@ -166,9 +166,27 @@ struct PulseApp: App {
         exerciseSessionService.startSession(with: exercises, audioService: audioService)
 
         DispatchQueue.main.async {
-            NSApplication.shared.activate()
+            NSApplication.shared.setActivationPolicy(.regular)
             openWindow(id: Constants.WindowID.exerciseSession)
+            NSApplication.shared.activate()
         }
+
+        // Ensure the window is fully in front after it renders
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            bringExerciseWindowToFront()
+        }
+    }
+
+    private func bringExerciseWindowToFront() {
+        for window in NSApplication.shared.windows {
+            if window.title == "Exercise Session" {
+                window.level = .statusBar
+                window.orderFrontRegardless()
+                window.makeKeyAndOrderFront(nil)
+                break
+            }
+        }
+        NSApplication.shared.activate()
     }
 
     @ViewBuilder
