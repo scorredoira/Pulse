@@ -86,12 +86,11 @@ struct ExerciseSessionView: View {
                         }
 
                         Button {
-                            sessionService.cancelSession()
-                            dismiss()
+                            sessionService.skipCurrentExercise()
                         } label: {
-                            Label("Skip", systemImage: "forward.end.fill")
+                            Label("Skip", systemImage: "forward.fill")
                         }
-                        .buttonStyle(PillButtonStyle(color: .secondary))
+                        .buttonStyle(PillButtonStyle(color: .blue))
                     }
 
                     Spacer()

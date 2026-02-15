@@ -240,6 +240,7 @@ struct HomeView: View {
             .background(.regularMaterial, in: RoundedRectangle(cornerRadius: CornerRadius.large, style: .continuous))
         }
         .buttonStyle(.plain)
+        .contentShape(Rectangle())
         .disabled(routine.exercises.isEmpty)
         .opacity(routine.exercises.isEmpty ? 0.4 : 1)
     }
