@@ -3,6 +3,8 @@ import SwiftData
 
 @main
 struct PulseApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+
     @State private var timerService = TimerService()
     @State private var exerciseSessionService = ExerciseSessionService()
     @State private var audioService = AudioGuidanceService()
@@ -32,6 +34,16 @@ struct PulseApp: App {
                 routineFileService: routineFileService
             )
             .modelContainer(container)
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            switch newPhase {
+            case .background:
+                timerService.handleEnteredBackground()
+            case .active:
+                timerService.handleEnteredForeground()
+            default:
+                break
+            }
         }
     }
 }

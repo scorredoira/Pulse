@@ -30,11 +30,8 @@ final class AudioGuidanceService {
     #if os(iOS)
     private func configureAudioSession() {
         let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.playback, mode: .spokenAudio, options: [.mixWithOthers, .duckOthers])
-    }
-
-    private func activateAudioSession() {
-        try? AVAudioSession.sharedInstance().setActive(true)
+        try? session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+        try? session.setActive(true)
     }
 
     fileprivate func deactivateAudioSession() {
@@ -117,13 +114,13 @@ final class AudioGuidanceService {
     func stop() {
         synthesizer.stopSpeaking(at: .immediate)
         isSpeaking = false
+        #if os(iOS)
+        deactivateAudioSession()
+        #endif
     }
 
     private func speak(_ text: String) {
         synthesizer.stopSpeaking(at: .immediate)
-        #if os(iOS)
-        activateAudioSession()
-        #endif
         let utterance = AVSpeechUtterance(string: text)
         utterance.rate = speechRate
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
@@ -143,9 +140,6 @@ private final class SpeechDelegate: NSObject, AVSpeechSynthesizerDelegate {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         DispatchQueue.main.async {
             self.service?.isSpeaking = false
-            #if os(iOS)
-            self.service?.deactivateAudioSession()
-            #endif
         }
     }
 }
