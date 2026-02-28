@@ -20,10 +20,10 @@ struct ExerciseStepView: View {
                 .tracking(1.5)
 
             // Image or icon
-            if !isResting && !exercise.imageFileNames.isEmpty {
+            if !exercise.imageFileNames.isEmpty {
                 ExerciseImageView(
                     imageFileNames: exercise.imageFileNames,
-                    isAnimating: remainingSeconds > 0
+                    isAnimating: !isResting && remainingSeconds > 0
                 )
                 .id(exercise.name)
             } else {
