@@ -17,70 +17,72 @@ struct ExerciseCompleteView: View {
     }
 
     var body: some View {
-        VStack(spacing: Spacing.xxl) {
-            // Celebration
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 64))
-                .foregroundStyle(.green.gradient)
-                .symbolEffect(.bounce)
+        ScrollView {
+            VStack(spacing: Spacing.xxl) {
+                // Celebration
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 64))
+                    .foregroundStyle(.green.gradient)
+                    .symbolEffect(.bounce)
 
-            Text("Session Complete!")
-                .font(.title)
-                .fontWeight(.bold)
+                Text("Session Complete!")
+                    .font(.title)
+                    .fontWeight(.bold)
 
-            // Stats
-            HStack(spacing: 32) {
-                statItem(
-                    value: "\(completedLogs.count)",
-                    label: "Exercises",
-                    icon: "figure.run"
-                )
-
-                statItem(
-                    value: TimeFormatting.formatMinutesSeconds(totalSeconds),
-                    label: "Duration",
-                    icon: "clock.fill"
-                )
-
-                if !skippedLogs.isEmpty {
+                // Stats
+                HStack(spacing: 32) {
                     statItem(
-                        value: "\(skippedLogs.count)",
-                        label: "Skipped",
-                        icon: "forward.fill"
+                        value: "\(completedLogs.count)",
+                        label: "Exercises",
+                        icon: "figure.run"
                     )
-                }
-            }
-            .cardStyle()
 
-            // Exercise list
-            VStack(alignment: .leading, spacing: Spacing.sm) {
-                ForEach(Array(logs.enumerated()), id: \.offset) { _, log in
-                    HStack {
-                        Image(systemName: log.skipped ? "xmark.circle.fill" : "checkmark.circle.fill")
-                            .foregroundStyle(log.skipped ? .orange : .green)
+                    statItem(
+                        value: TimeFormatting.formatMinutesSeconds(totalSeconds),
+                        label: "Duration",
+                        icon: "clock.fill"
+                    )
 
-                        Text(log.exerciseName)
-                            .font(.body)
-
-                        Spacer()
-
-                        Text(TimeFormatting.formatMinutesSeconds(log.durationSeconds))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                    if !skippedLogs.isEmpty {
+                        statItem(
+                            value: "\(skippedLogs.count)",
+                            label: "Skipped",
+                            icon: "forward.fill"
+                        )
                     }
                 }
-            }
-            .cardStyle()
+                .cardStyle()
 
-            Button {
-                onDismiss()
-            } label: {
-                Text("Done")
+                // Exercise list
+                VStack(alignment: .leading, spacing: Spacing.sm) {
+                    ForEach(Array(logs.enumerated()), id: \.offset) { _, log in
+                        HStack {
+                            Image(systemName: log.skipped ? "xmark.circle.fill" : "checkmark.circle.fill")
+                                .foregroundStyle(log.skipped ? .orange : .green)
+
+                            Text(log.exerciseName)
+                                .font(.body)
+
+                            Spacer()
+
+                            Text(TimeFormatting.formatMinutesSeconds(log.durationSeconds))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .cardStyle()
+
+                Button {
+                    onDismiss()
+                } label: {
+                    Text("Done")
+                }
+                .buttonStyle(WidePillButtonStyle(color: .accentColor))
+                .controlSize(.large)
             }
-            .buttonStyle(WidePillButtonStyle(color: .accentColor))
-            .controlSize(.large)
+            .padding(32)
         }
-        .padding(32)
     }
 
     private func statItem(value: String, label: String, icon: String) -> some View {
