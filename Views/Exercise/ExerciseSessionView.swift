@@ -18,8 +18,9 @@ struct ExerciseSessionView: View {
     }
 
     var body: some View {
-        VStack {
-            switch sessionService.state {
+        ScrollView {
+            VStack {
+                switch sessionService.state {
             case .idle:
                 ContentUnavailableView(
                     "No Active Session",
@@ -218,6 +219,7 @@ struct ExerciseSessionView: View {
                     }
                 )
                 .transition(.opacity)
+                }
             }
         }
         .animation(.easeInOut(duration: 0.3), value: sessionService.state)
