@@ -33,10 +33,6 @@ final class AudioGuidanceService {
         try? session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
         try? session.setActive(true)
     }
-
-    fileprivate func deactivateAudioSession() {
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-    }
     #endif
 
     func announceExercise(name: String, duration: Int) {
@@ -114,9 +110,6 @@ final class AudioGuidanceService {
     func stop() {
         synthesizer.stopSpeaking(at: .immediate)
         isSpeaking = false
-        #if os(iOS)
-        deactivateAudioSession()
-        #endif
     }
 
     private func speak(_ text: String) {
