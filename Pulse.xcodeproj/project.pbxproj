@@ -26,8 +26,8 @@
 		AA000017 /* ExerciseStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000017 /* ExerciseStepView.swift */; };
 		AA000018 /* ExerciseCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000018 /* ExerciseCompleteView.swift */; };
 		AA000019 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000019 /* DashboardView.swift */; };
-		AA000020 /* DailyStatsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020 /* DailyStatsChart.swift */; };
-		AA000021 /* WeeklyStatsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000021 /* WeeklyStatsChart.swift */; };
+		AA000040 /* ActivityCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000044 /* ActivityCalendarView.swift */; };
+		AA000041 /* DayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000045 /* DayDetailView.swift */; };
 		AA000022 /* StreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000022 /* StreakView.swift */; };
 		AA000023 /* ExerciseHistoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000023 /* ExerciseHistoryList.swift */; };
 		AA000024 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000024 /* SettingsView.swift */; };
@@ -61,8 +61,8 @@
 		BB000017 /* ExerciseStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000017 /* ExerciseStepView.swift */; };
 		BB000018 /* ExerciseCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000018 /* ExerciseCompleteView.swift */; };
 		BB000019 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000019 /* DashboardView.swift */; };
-		BB000020 /* DailyStatsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020 /* DailyStatsChart.swift */; };
-		BB000021 /* WeeklyStatsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000021 /* WeeklyStatsChart.swift */; };
+		BB000038 /* ActivityCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000044 /* ActivityCalendarView.swift */; };
+		BB000039 /* DayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000045 /* DayDetailView.swift */; };
 		BB000022 /* StreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000022 /* StreakView.swift */; };
 		BB000023 /* ExerciseHistoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000023 /* ExerciseHistoryList.swift */; };
 		BB000024 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000024 /* SettingsView.swift */; };
@@ -105,8 +105,8 @@
 		AB000017 /* ExerciseStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseStepView.swift; sourceTree = "<group>"; };
 		AB000018 /* ExerciseCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseCompleteView.swift; sourceTree = "<group>"; };
 		AB000019 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
-		AB000020 /* DailyStatsChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyStatsChart.swift; sourceTree = "<group>"; };
-		AB000021 /* WeeklyStatsChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyStatsChart.swift; sourceTree = "<group>"; };
+		AB000044 /* ActivityCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCalendarView.swift; sourceTree = "<group>"; };
+		AB000045 /* DayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayDetailView.swift; sourceTree = "<group>"; };
 		AB000022 /* StreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakView.swift; sourceTree = "<group>"; };
 		AB000023 /* ExerciseHistoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseHistoryList.swift; sourceTree = "<group>"; };
 		AB000024 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -241,8 +241,8 @@
 			isa = PBXGroup;
 			children = (
 				AB000019 /* DashboardView.swift */,
-				AB000020 /* DailyStatsChart.swift */,
-				AB000021 /* WeeklyStatsChart.swift */,
+				AB000044 /* ActivityCalendarView.swift */,
+				AB000045 /* DayDetailView.swift */,
 				AB000022 /* StreakView.swift */,
 				AB000023 /* ExerciseHistoryList.swift */,
 			);
@@ -441,8 +441,8 @@
 				AA000017 /* ExerciseStepView.swift in Sources */,
 				AA000018 /* ExerciseCompleteView.swift in Sources */,
 				AA000019 /* DashboardView.swift in Sources */,
-				AA000020 /* DailyStatsChart.swift in Sources */,
-				AA000021 /* WeeklyStatsChart.swift in Sources */,
+				AA000040 /* ActivityCalendarView.swift in Sources */,
+				AA000041 /* DayDetailView.swift in Sources */,
 				AA000022 /* StreakView.swift in Sources */,
 				AA000023 /* ExerciseHistoryList.swift in Sources */,
 				AA000024 /* SettingsView.swift in Sources */,
@@ -485,8 +485,8 @@
 				BB000017 /* ExerciseStepView.swift in Sources */,
 				BB000018 /* ExerciseCompleteView.swift in Sources */,
 				BB000019 /* DashboardView.swift in Sources */,
-				BB000020 /* DailyStatsChart.swift in Sources */,
-				BB000021 /* WeeklyStatsChart.swift in Sources */,
+				BB000038 /* ActivityCalendarView.swift in Sources */,
+				BB000039 /* DayDetailView.swift in Sources */,
 				BB000022 /* StreakView.swift in Sources */,
 				BB000023 /* ExerciseHistoryList.swift in Sources */,
 				BB000024 /* SettingsView.swift in Sources */,

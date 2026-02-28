@@ -13,3 +13,4 @@ echo "Launching Pulse from $APP_PATH..."
 open "$APP_PATH/Pulse.app"
 
 echo "Done!"
+

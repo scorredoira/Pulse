@@ -10,13 +10,8 @@ struct DashboardView: View {
                 // Streak cards
                 StreakView(sessions: sessions)
 
-                // Daily chart
-                DailyStatsChart(sessions: sessions)
-                    .cardStyle()
-
-                // Weekly chart
-                WeeklyStatsChart(sessions: sessions)
-                    .cardStyle()
+                // Activity calendar
+                ActivityCalendarView(sessions: sessions)
 
                 // History
                 ExerciseHistoryList(sessions: sessions)
