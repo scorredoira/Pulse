@@ -10,7 +10,7 @@ final class AppSettings {
     var speechVolume: Float
     var healthKitEnabled: Bool
     var launchAtLogin: Bool
-    var repCountingEnabled: Bool
+    var repCountingEnabled: Bool = true
 
     init(
         workIntervalMinutes: Int = 45,

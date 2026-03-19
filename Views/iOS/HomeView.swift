@@ -18,8 +18,17 @@ struct HomeView: View {
 
     @State private var showExerciseSession = false
     @State private var showImportAlert = false
+    @State private var currentRoutineIndex = 0
     @State private var autoStartCountdown: Int = 5
     @State private var exerciseRoutineId: String?
+
+    // Inline exercise timer
+    @State private var inlineExerciseID: PersistentIdentifier?
+    @State private var inlineSeconds: Int = 0
+    @State private var inlinePaused: Bool = false
+    @State private var inlineSet: Int = 1
+    @State private var inlineTotalSets: Int = 1
+    @State private var inlineSetDuration: Int = 0
 
     private var appSettings: AppSettings? { settings.first }
 
@@ -63,6 +72,17 @@ struct HomeView: View {
         .onAppear {
             setupTimerCallback()
         }
+        .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
+            guard inlineExerciseID != nil, !inlinePaused else { return }
+            if inlineSeconds > 1 {
+                inlineSeconds -= 1
+            } else if inlineSet < inlineTotalSets {
+                inlineSet += 1
+                inlineSeconds = inlineSetDuration
+            } else {
+                inlineExerciseID = nil
+            }
+        }
         .onChange(of: exerciseSessionService.state) {
             switch exerciseSessionService.state {
             case .preparing, .running, .paused, .waitingToStart, .completed:
@@ -91,28 +111,42 @@ struct HomeView: View {
                 exerciseTimePrompt
                     .padding()
             } else {
-                ScrollView {
-                    VStack(spacing: Spacing.lg) {
-                        // Active exercise session banner
-                        if exerciseSessionService.state == .running || exerciseSessionService.state == .paused || exerciseSessionService.state == .waitingToStart {
-                            Button {
-                                showExerciseSession = true
-                            } label: {
-                                Label("Resume Exercise Session", systemImage: "arrow.up.forward.app")
-                            }
-                            .buttonStyle(WidePillButtonStyle(color: .green))
-                            .padding(.horizontal)
+                VStack(spacing: 0) {
+                    // Active exercise session banner
+                    if exerciseSessionService.state == .running || exerciseSessionService.state == .paused || exerciseSessionService.state == .waitingToStart {
+                        Button {
+                            showExerciseSession = true
+                        } label: {
+                            Label("Resume Exercise Session", systemImage: "arrow.up.forward.app")
                         }
-
-                        // Timer section (when timers are running)
-                        if timerService.state != .idle {
-                            timerSection
-                        }
-
-                        // Routines list
-                        routineListSection
+                        .buttonStyle(WidePillButtonStyle(color: .green))
+                        .padding()
                     }
-                    .padding(.vertical)
+
+                    // Timer section (when timers are running)
+                    if timerService.state != .idle {
+                        timerSection
+                    }
+
+                    // Swipeable routine pages
+                    if allRoutines.isEmpty {
+                        VStack(spacing: Spacing.md) {
+                            Spacer()
+                            Image(systemName: "figure.run")
+                                .font(.system(size: 40))
+                                .foregroundStyle(.secondary)
+                            Text("No routines yet")
+                                .font(.headline)
+                                .foregroundStyle(.secondary)
+                            Text("Create routines in Settings")
+                                .font(.subheadline)
+                                .foregroundStyle(.tertiary)
+                            Spacer()
+                        }
+                        .frame(maxWidth: .infinity)
+                    } else {
+                        routinePager
+                    }
                 }
             }
         }
@@ -139,121 +173,168 @@ struct HomeView: View {
         .padding(.horizontal)
     }
 
-    // MARK: - Routine List
+    // MARK: - Routine Pager
 
-    private var routineListSection: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            HStack {
-                Text("Routines")
-                    .font(.title2.bold())
-                Spacer()
-                if timerService.state == .idle && !activeRoutines.filter({ !$0.exercises.isEmpty }).isEmpty {
-                    Button {
-                        startTimers()
-                    } label: {
-                        Label("Start Timers", systemImage: "timer")
-                            .font(.subheadline.weight(.medium))
-                    }
-                    .buttonStyle(PillButtonStyle(color: .green))
-                }
+    private var routinePager: some View {
+        TabView(selection: $currentRoutineIndex) {
+            ForEach(Array(allRoutines.enumerated()), id: \.element.id) { index, routine in
+                routinePage(routine)
+                    .tag(index)
             }
-            .padding(.horizontal)
-
-            if allRoutines.isEmpty {
-                VStack(spacing: Spacing.md) {
-                    Image(systemName: "figure.run")
-                        .font(.system(size: 40))
-                        .foregroundStyle(.secondary)
-                    Text("No routines yet")
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-                    Text("Create routines in Settings")
-                        .font(.subheadline)
-                        .foregroundStyle(.tertiary)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 40)
-            } else {
-                LazyVStack(spacing: Spacing.sm) {
-                    ForEach(allRoutines) { routine in
-                        routineRow(routine)
-                    }
-                }
-                .padding(.horizontal)
+        }
+        .tabViewStyle(.page(indexDisplayMode: .automatic))
+        .onChange(of: allRoutines.count) {
+            if currentRoutineIndex >= allRoutines.count {
+                currentRoutineIndex = max(0, allRoutines.count - 1)
             }
         }
     }
 
-    private func routineRow(_ routine: Routine) -> some View {
-        Button {
-            startExerciseSession(for: routine)
-        } label: {
-            HStack(spacing: Spacing.md) {
-                // Icon
-                Image(systemName: routine.exercises.first?.iconName ?? "figure.walk")
-                    .font(.title2)
-                    .foregroundStyle(.accent)
-                    .frame(width: 40, height: 40)
-                    .background(Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: CornerRadius.medium, style: .continuous))
-
-                // Info
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: Spacing.xs) {
+    private func routinePage(_ routine: Routine) -> some View {
+        ScrollView {
+            VStack(spacing: Spacing.lg) {
+                // Header: routine name + voice toggle
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: Spacing.xs) {
                         Text(routine.name)
-                            .font(.body.weight(.semibold))
-                            .lineLimit(1)
+                            .font(.largeTitle.bold())
+                        HStack(spacing: Spacing.sm) {
+                            Text("\(routine.exercises.count) exercise\(routine.exercises.count == 1 ? "" : "s")")
+                            if routine.isActive {
+                                Text("·")
+                                Text("every \(routine.intervalMinutes) min")
+                            }
+                        }
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    }
 
-                        if routine.isActive {
-                            Image(systemName: "timer")
-                                .font(.caption2)
-                                .foregroundStyle(.orange)
+                    Spacer()
+
+                    voiceToggle
+                }
+
+                // Exercises
+                ForEach(routine.sortedExercises) { exercise in
+                    exerciseCard(exercise, routine: routine)
+                }
+            }
+            .padding()
+            .padding(.bottom, 30)
+        }
+    }
+
+    @ViewBuilder
+    private func exerciseCard(_ exercise: Exercise, routine: Routine) -> some View {
+        let isRunning = exercise.persistentModelID == inlineExerciseID
+
+        VStack(spacing: Spacing.md) {
+            if !exercise.imageFileNames.isEmpty {
+                ExerciseImageView(
+                    imageFileNames: exercise.imageFileNames,
+                    isAnimating: isRunning,
+                    maxImageHeight: 200
+                )
+            } else {
+                Image(systemName: exercise.iconName)
+                    .font(.system(size: 44))
+                    .foregroundStyle(.accent)
+                    .frame(width: 80, height: 80)
+                    .background(Color.accentColor.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: CornerRadius.large, style: .continuous))
+            }
+
+            Text(exercise.name)
+                .font(.title2.bold())
+
+            if isRunning {
+                VStack(spacing: Spacing.sm) {
+                    Text(TimeFormatting.formatSeconds(inlineSeconds))
+                        .font(.system(size: 48, weight: .bold, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundStyle(inlineSeconds <= 5 ? .red : inlineSeconds <= 10 ? .orange : .primary)
+                        .contentTransition(.numericText(countsDown: true))
+                        .animation(.default, value: inlineSeconds)
+
+                    if inlineTotalSets > 1 {
+                        Text("Set \(inlineSet) of \(inlineTotalSets)")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                HStack(spacing: Spacing.md) {
+                    Button {
+                        inlinePaused.toggle()
+                    } label: {
+                        Label(inlinePaused ? "Resume" : "Pause",
+                              systemImage: inlinePaused ? "play.fill" : "pause.fill")
+                    }
+                    .buttonStyle(PillButtonStyle(color: inlinePaused ? .green : .orange))
+
+                    Button {
+                        inlineExerciseID = nil
+                    } label: {
+                        Label("Stop", systemImage: "stop.fill")
+                    }
+                    .buttonStyle(PillButtonStyle(color: .red))
+                }
+            } else {
+                HStack(spacing: Spacing.xl) {
+                    VStack(spacing: Spacing.xs) {
+                        if exercise.reps > 0 {
+                            Text("\(exercise.reps)")
+                                .font(.system(size: 32, weight: .bold, design: .rounded))
+                            Text("reps")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text(TimeFormatting.formatSeconds(exercise.durationSeconds))
+                                .font(.system(size: 32, weight: .bold, design: .rounded))
+                            Text("duration")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                         }
                     }
 
-                    Text(routineSubtitle(routine))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
+                    VStack(spacing: Spacing.xs) {
+                        Text("\(exercise.sets)")
+                            .font(.system(size: 32, weight: .bold, design: .rounded))
+                        Text(exercise.sets == 1 ? "set" : "sets")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
 
-                Spacer()
-
-                // Running timer indicator
-                if let rt = timerService.routineTimers.first(where: { $0.id == routine.name }),
-                   rt.state == .running || rt.state == .paused {
-                    Text(rt.displayString)
-                        .font(.system(.callout, design: .rounded, weight: .semibold))
-                        .monospacedDigit()
-                        .foregroundStyle(rt.state == .paused ? .orange : .accentColor)
-                        .contentTransition(.numericText(countsDown: true))
-                        .animation(.default, value: rt.remainingSeconds)
+                Button {
+                    inlineExerciseID = exercise.persistentModelID
+                    inlineSetDuration = exercise.effectiveDurationSeconds
+                    inlineSeconds = exercise.effectiveDurationSeconds
+                    inlineSet = 1
+                    inlineTotalSets = exercise.sets
+                    inlinePaused = false
+                } label: {
+                    Label("Start", systemImage: "play.fill")
                 }
-
-                // Play icon
-                Image(systemName: "play.fill")
-                    .font(.body)
-                    .foregroundStyle(.white)
-                    .frame(width: 36, height: 36)
-                    .background(.accent, in: Circle())
+                .buttonStyle(WidePillButtonStyle(color: .green))
+                .disabled(inlineExerciseID != nil)
             }
-            .padding(Spacing.md)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: CornerRadius.large, style: .continuous))
         }
-        .buttonStyle(.plain)
-        .contentShape(Rectangle())
-        .disabled(routine.exercises.isEmpty)
-        .opacity(routine.exercises.isEmpty ? 0.4 : 1)
+        .frame(maxWidth: .infinity)
+        .padding(Spacing.lg)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: CornerRadius.large, style: .continuous))
     }
 
-    private func routineSubtitle(_ routine: Routine) -> String {
-        let count = routine.exercises.count
-        if count == 0 { return "No exercises" }
-        let duration = TimeFormatting.formatMinutesSeconds(routine.totalDurationSeconds)
-        var parts = ["\(count) exercise\(count == 1 ? "" : "s")", duration]
-        if routine.isActive {
-            parts.append("every \(routine.intervalMinutes)m")
+    private var voiceToggle: some View {
+        Button {
+            appSettings?.voiceGuidanceEnabled.toggle()
+        } label: {
+            Image(systemName: appSettings?.voiceGuidanceEnabled == true ? "speaker.wave.2.fill" : "speaker.slash.fill")
+                .font(.title2)
+                .foregroundStyle(appSettings?.voiceGuidanceEnabled == true ? .accent : .secondary)
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
         }
-        return parts.joined(separator: " · ")
     }
 
     // MARK: - Timer display

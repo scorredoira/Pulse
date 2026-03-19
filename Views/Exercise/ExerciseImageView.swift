@@ -3,6 +3,8 @@ import SwiftUI
 struct ExerciseImageView: View {
     let imageFileNames: [String]
     var isAnimating: Bool = true
+    var maxImageHeight: CGFloat = 140
+    var fillWidth: Bool = false
 
     @State private var currentIndex: Int = 0
     @State private var rotationTimer: Timer?
@@ -15,18 +17,22 @@ struct ExerciseImageView: View {
             #if os(macOS)
             Image(nsImage: images[index])
                 .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxHeight: 120)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .aspectRatio(contentMode: fillWidth ? .fill : .fit)
+                .frame(maxHeight: maxImageHeight)
+                .frame(maxWidth: fillWidth ? .infinity : nil)
+                .clipped()
+                .clipShape(RoundedRectangle(cornerRadius: fillWidth ? 0 : 8))
                 .animation(.easeInOut(duration: 0.5), value: currentIndex)
                 .onAppear { startRotation(count: images.count) }
                 .onDisappear { stopRotation() }
             #else
             Image(uiImage: images[index])
                 .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxHeight: 140)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .aspectRatio(contentMode: fillWidth ? .fill : .fit)
+                .frame(maxHeight: maxImageHeight)
+                .frame(maxWidth: fillWidth ? .infinity : nil)
+                .clipped()
+                .clipShape(RoundedRectangle(cornerRadius: fillWidth ? 0 : 8))
                 .animation(.easeInOut(duration: 0.5), value: currentIndex)
                 .onAppear { startRotation(count: images.count) }
                 .onDisappear { stopRotation() }
