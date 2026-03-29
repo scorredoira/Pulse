@@ -39,72 +39,76 @@ final class AudioGuidanceService {
     // MARK: - Public Announcements
 
     func announceExercise(name: String, duration: Int) {
-        guard voiceGuidanceEnabled else { return }
+        guard voiceGuidanceEnabled || beepOnlyMode else { return }
         speak("\(name). \(TimeFormatting.spokenDuration(duration)).")
     }
 
     func announceExerciseWithSets(name: String, duration: Int, set: Int, totalSets: Int) {
-        guard voiceGuidanceEnabled else { return }
+        guard voiceGuidanceEnabled || beepOnlyMode else { return }
         speak("\(name). \(set) of \(totalSets). \(TimeFormatting.spokenDuration(duration)).")
     }
 
     func announceExerciseWithReps(name: String, reps: Int) {
-        guard voiceGuidanceEnabled else { return }
+        guard voiceGuidanceEnabled || beepOnlyMode else { return }
         speak("\(name). \(reps) repetitions.")
     }
 
     func announceExerciseWithRepsAndSets(name: String, reps: Int, set: Int, totalSets: Int) {
-        guard voiceGuidanceEnabled else { return }
+        guard voiceGuidanceEnabled || beepOnlyMode else { return }
         speak("\(name). Set \(set) of \(totalSets). \(reps) repetitions.")
     }
 
     func announceRest(duration: Int) {
-        guard voiceGuidanceEnabled else { return }
+        guard voiceGuidanceEnabled || beepOnlyMode else { return }
         speak("Rest. \(TimeFormatting.spokenDuration(duration)).")
     }
 
     func announceRepCount(_ rep: Int) {
-        guard voiceGuidanceEnabled, repCountingEnabled else { return }
+        guard voiceGuidanceEnabled, !beepOnlyMode, repCountingEnabled else { return }
         speak("\(rep)")
     }
 
     func announceCountdown(_ seconds: Int) {
-        guard voiceGuidanceEnabled else { return }
+        guard voiceGuidanceEnabled, !beepOnlyMode else { return }
         speak("\(seconds)")
     }
 
     func announceExerciseComplete() {
-        guard voiceGuidanceEnabled else { return }
+        guard voiceGuidanceEnabled || beepOnlyMode else { return }
         speak("Done!")
     }
 
     func announceSessionComplete(totalExercises: Int, totalMinutes: Int) {
-        guard voiceGuidanceEnabled else { return }
+        guard voiceGuidanceEnabled || beepOnlyMode else { return }
         speak("Session complete! \(totalExercises) exercises in \(totalMinutes) minutes.")
     }
 
     func announceWorkIntervalComplete() {
-        guard voiceGuidanceEnabled else { return }
+        guard voiceGuidanceEnabled || beepOnlyMode else { return }
         speak("Time to move!")
     }
 
     func playBeep() {
-        guard soundEnabled else { return }
-        #if os(macOS)
-        NSSound.beep()
-        #else
-        AudioServicesPlaySystemSound(1057)
-        #endif
+        guard soundEnabled || beepOnlyMode else { return }
+        playSystemBeep()
     }
 
     func playTransitionBeep() {
-        guard soundEnabled else { return }
+        guard soundEnabled || beepOnlyMode else { return }
         #if os(macOS)
         if let sound = NSSound(named: "Tink") {
             sound.play()
         } else {
             NSSound.beep()
         }
+        #else
+        AudioServicesPlaySystemSound(1057)
+        #endif
+    }
+
+    private func playSystemBeep() {
+        #if os(macOS)
+        NSSound.beep()
         #else
         AudioServicesPlaySystemSound(1057)
         #endif
@@ -122,8 +126,10 @@ final class AudioGuidanceService {
     // MARK: - Private Speech
 
     private func speak(_ text: String) {
-        // In beep-only mode, voice is silent — playBeep/playTransitionBeep handle alerts
-        if beepOnlyMode { return }
+        if beepOnlyMode {
+            playSystemBeep()
+            return
+        }
         #if os(iOS)
         speakiOS(text)
         #else

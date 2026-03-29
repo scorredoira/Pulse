@@ -16,23 +16,23 @@ struct GeneralSettingsTab: View {
         Form {
             if let settings = appSettings {
                 Section("Audio") {
-                    Toggle("Sound effects", isOn: Binding(
-                        get: { settings.soundEnabled },
-                        set: { settings.soundEnabled = $0 }
+                    Toggle("Beep only", isOn: Binding(
+                        get: { settings.beepOnlyMode },
+                        set: { settings.beepOnlyMode = $0 }
                     ))
 
-                    Toggle("Voice guidance", isOn: Binding(
-                        get: { settings.voiceGuidanceEnabled },
-                        set: { settings.voiceGuidanceEnabled = $0 }
-                    ))
-
-                    if settings.voiceGuidanceEnabled {
-                        Toggle("Beep only (no voice)", isOn: Binding(
-                            get: { settings.beepOnlyMode },
-                            set: { settings.beepOnlyMode = $0 }
+                    if !settings.beepOnlyMode {
+                        Toggle("Sound effects", isOn: Binding(
+                            get: { settings.soundEnabled },
+                            set: { settings.soundEnabled = $0 }
                         ))
 
-                        if !settings.beepOnlyMode {
+                        Toggle("Voice guidance", isOn: Binding(
+                            get: { settings.voiceGuidanceEnabled },
+                            set: { settings.voiceGuidanceEnabled = $0 }
+                        ))
+
+                        if settings.voiceGuidanceEnabled {
                             Toggle("Count reps aloud", isOn: Binding(
                                 get: { settings.repCountingEnabled },
                                 set: { settings.repCountingEnabled = $0 }
