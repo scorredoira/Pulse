@@ -27,47 +27,54 @@ struct GeneralSettingsTab: View {
                     ))
 
                     if settings.voiceGuidanceEnabled {
-                        Toggle("Count reps aloud", isOn: Binding(
-                            get: { settings.repCountingEnabled },
-                            set: { settings.repCountingEnabled = $0 }
+                        Toggle("Beep only (no voice)", isOn: Binding(
+                            get: { settings.beepOnlyMode },
+                            set: { settings.beepOnlyMode = $0 }
                         ))
-                        HStack {
-                            Text("Speech rate")
-                            Slider(
-                                value: Binding(
-                                    get: { settings.speechRate },
-                                    set: { settings.speechRate = $0 }
-                                ),
-                                in: Constants.minimumSpeechRate...Constants.maximumSpeechRate,
-                                step: 0.05
-                            ) {
-                                Text("Speech rate")
-                            } minimumValueLabel: {
-                                Text("Slow")
-                                    .font(.caption2)
-                            } maximumValueLabel: {
-                                Text("Fast")
-                                    .font(.caption2)
-                            }
-                        }
 
-                        HStack {
-                            Text("Voice volume")
-                            Slider(
-                                value: Binding(
-                                    get: { settings.speechVolume },
-                                    set: { settings.speechVolume = $0 }
-                                ),
-                                in: 0.1...1.0,
-                                step: 0.1
-                            ) {
+                        if !settings.beepOnlyMode {
+                            Toggle("Count reps aloud", isOn: Binding(
+                                get: { settings.repCountingEnabled },
+                                set: { settings.repCountingEnabled = $0 }
+                            ))
+                            HStack {
+                                Text("Speech rate")
+                                Slider(
+                                    value: Binding(
+                                        get: { settings.speechRate },
+                                        set: { settings.speechRate = $0 }
+                                    ),
+                                    in: Constants.minimumSpeechRate...Constants.maximumSpeechRate,
+                                    step: 0.05
+                                ) {
+                                    Text("Speech rate")
+                                } minimumValueLabel: {
+                                    Text("Slow")
+                                        .font(.caption2)
+                                } maximumValueLabel: {
+                                    Text("Fast")
+                                        .font(.caption2)
+                                }
+                            }
+
+                            HStack {
                                 Text("Voice volume")
-                            } minimumValueLabel: {
-                                Text("Low")
-                                    .font(.caption2)
-                            } maximumValueLabel: {
-                                Text("Max")
-                                    .font(.caption2)
+                                Slider(
+                                    value: Binding(
+                                        get: { settings.speechVolume },
+                                        set: { settings.speechVolume = $0 }
+                                    ),
+                                    in: 0.1...1.0,
+                                    step: 0.1
+                                ) {
+                                    Text("Voice volume")
+                                } minimumValueLabel: {
+                                    Text("Low")
+                                        .font(.caption2)
+                                } maximumValueLabel: {
+                                    Text("Max")
+                                        .font(.caption2)
+                                }
                             }
                         }
                     }

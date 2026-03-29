@@ -25,6 +25,7 @@ final class AudioGuidanceService {
     var soundEnabled: Bool = true
     var voiceGuidanceEnabled: Bool = true
     var repCountingEnabled: Bool = true
+    var beepOnlyMode: Bool = false
     var speechRate: Float = 0.5
     var speechVolume: Float = 1.0
 
@@ -121,6 +122,8 @@ final class AudioGuidanceService {
     // MARK: - Private Speech
 
     private func speak(_ text: String) {
+        // In beep-only mode, voice is silent — playBeep/playTransitionBeep handle alerts
+        if beepOnlyMode { return }
         #if os(iOS)
         speakiOS(text)
         #else

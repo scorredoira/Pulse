@@ -11,6 +11,7 @@ final class AppSettings {
     var healthKitEnabled: Bool
     var launchAtLogin: Bool
     var repCountingEnabled: Bool = true
+    var beepOnlyMode: Bool = false
 
     init(
         workIntervalMinutes: Int = 45,
@@ -20,7 +21,8 @@ final class AppSettings {
         speechVolume: Float = 1.0,
         healthKitEnabled: Bool = false,
         launchAtLogin: Bool = false,
-        repCountingEnabled: Bool = true
+        repCountingEnabled: Bool = true,
+        beepOnlyMode: Bool = false
     ) {
         self.workIntervalMinutes = workIntervalMinutes
         self.soundEnabled = soundEnabled
@@ -30,5 +32,6 @@ final class AppSettings {
         self.healthKitEnabled = healthKitEnabled
         self.launchAtLogin = launchAtLogin
         self.repCountingEnabled = repCountingEnabled
+        self.beepOnlyMode = beepOnlyMode
     }
 }

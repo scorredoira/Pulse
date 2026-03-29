@@ -84,19 +84,31 @@ struct HomeView: View {
             }
         }
         .onChange(of: exerciseSessionService.state) {
+            let timerActive = timerService.state == .running || timerService.state == .exerciseTime
             switch exerciseSessionService.state {
-            case .preparing, .running, .paused, .waitingToStart, .completed:
-                UIApplication.shared.isIdleTimerDisabled = exerciseSessionService.state != .completed
+            case .preparing, .running, .paused, .waitingToStart:
+                UIApplication.shared.isIdleTimerDisabled = true
+            case .completed:
+                UIApplication.shared.isIdleTimerDisabled = timerActive
             case .idle:
-                UIApplication.shared.isIdleTimerDisabled = false
+                UIApplication.shared.isIdleTimerDisabled = timerActive
                 showExerciseSession = false
             }
         }
-        .onChange(of: scenePhase) { oldPhase, newPhase in
+        .onChange(of: timerService.state) {
+            // Keep screen on while any timer is running or exercise prompt is showing
+            let timerActive = timerService.state == .running || timerService.state == .exerciseTime
+            if timerActive {
+                UIApplication.shared.isIdleTimerDisabled = true
+            } else if exerciseSessionService.state == .idle || exerciseSessionService.state == .completed {
+                UIApplication.shared.isIdleTimerDisabled = false
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .background {
                 timerService.handleEnteredBackground()
                 scheduleTimerNotifications()
-            } else if newPhase == .active && oldPhase == .background {
+            } else if newPhase == .active {
                 timerService.handleEnteredForeground()
                 cancelTimerNotifications()
             }
@@ -421,11 +433,23 @@ struct HomeView: View {
 
     // MARK: - Actions
 
+    private func syncAudioSettings() {
+        if let settings = appSettings {
+            audioService.soundEnabled = settings.soundEnabled
+            audioService.voiceGuidanceEnabled = settings.voiceGuidanceEnabled
+            audioService.repCountingEnabled = settings.repCountingEnabled
+            audioService.beepOnlyMode = settings.beepOnlyMode
+            audioService.speechRate = settings.speechRate
+            audioService.speechVolume = settings.speechVolume
+        }
+    }
+
     private func startTimers() {
         let routines = activeRoutines.filter { !$0.exercises.isEmpty }.map { routine in
             (id: routine.name, name: routine.name, intervalMinutes: routine.intervalMinutes)
         }
         guard !routines.isEmpty else { return }
+        syncAudioSettings()
         timerService.startAll(routines: routines)
     }
 
@@ -472,13 +496,7 @@ struct HomeView: View {
 
         let routineId = routine.name
 
-        if let settings = appSettings {
-            audioService.soundEnabled = settings.soundEnabled
-            audioService.voiceGuidanceEnabled = settings.voiceGuidanceEnabled
-            audioService.repCountingEnabled = settings.repCountingEnabled
-            audioService.speechRate = settings.speechRate
-            audioService.speechVolume = settings.speechVolume
-        }
+        syncAudioSettings()
 
         exerciseSessionService.onSessionComplete = { logs in
             saveSession(logs: logs, routineId: routineId)

@@ -228,6 +228,7 @@ struct MenuBarContentView: View {
             audioService.soundEnabled = settings.soundEnabled
             audioService.voiceGuidanceEnabled = settings.voiceGuidanceEnabled
             audioService.repCountingEnabled = settings.repCountingEnabled
+            audioService.beepOnlyMode = settings.beepOnlyMode
             audioService.speechRate = settings.speechRate
             audioService.speechVolume = settings.speechVolume
         }
