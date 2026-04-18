@@ -29,6 +29,9 @@ struct HomeView: View {
     @State private var inlineSet: Int = 1
     @State private var inlineTotalSets: Int = 1
     @State private var inlineSetDuration: Int = 0
+    // Wall-clock target for the current set — makes the countdown resilient
+    // to dropped timer ticks (brief background/suspension).
+    @State private var inlineSetEndDate: Date?
 
     private var appSettings: AppSettings? { settings.first }
 
@@ -71,38 +74,22 @@ struct HomeView: View {
         }
         .onAppear {
             setupTimerCallback()
+            applyIdleTimerState()
         }
-        .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
-            guard inlineExerciseID != nil, !inlinePaused else { return }
-            if inlineSeconds > 1 {
-                inlineSeconds -= 1
-            } else if inlineSet < inlineTotalSets {
-                inlineSet += 1
-                inlineSeconds = inlineSetDuration
-            } else {
-                inlineExerciseID = nil
-            }
+        .onReceive(Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()) { _ in
+            tickInlineTimer()
         }
         .onChange(of: exerciseSessionService.state) {
-            let timerActive = timerService.state == .running || timerService.state == .exerciseTime
-            switch exerciseSessionService.state {
-            case .preparing, .running, .paused, .waitingToStart:
-                UIApplication.shared.isIdleTimerDisabled = true
-            case .completed:
-                UIApplication.shared.isIdleTimerDisabled = timerActive
-            case .idle:
-                UIApplication.shared.isIdleTimerDisabled = timerActive
+            applyIdleTimerState()
+            if exerciseSessionService.state == .idle {
                 showExerciseSession = false
             }
         }
         .onChange(of: timerService.state) {
-            // Keep screen on while any timer is running or exercise prompt is showing
-            let timerActive = timerService.state == .running || timerService.state == .exerciseTime
-            if timerActive {
-                UIApplication.shared.isIdleTimerDisabled = true
-            } else if exerciseSessionService.state == .idle || exerciseSessionService.state == .completed {
-                UIApplication.shared.isIdleTimerDisabled = false
-            }
+            applyIdleTimerState()
+        }
+        .onChange(of: inlineExerciseID) {
+            applyIdleTimerState()
         }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .background {
@@ -111,6 +98,10 @@ struct HomeView: View {
             } else if newPhase == .active {
                 timerService.handleEnteredForeground()
                 cancelTimerNotifications()
+                // Re-assert idle disable — iOS can reset it across scene transitions.
+                applyIdleTimerState()
+                // Reconcile the inline countdown against wall clock.
+                tickInlineTimer()
             }
         }
     }
@@ -277,7 +268,7 @@ struct HomeView: View {
 
                 HStack(spacing: Spacing.md) {
                     Button {
-                        inlinePaused.toggle()
+                        toggleInlinePause()
                     } label: {
                         Label(inlinePaused ? "Resume" : "Pause",
                               systemImage: inlinePaused ? "play.fill" : "pause.fill")
@@ -285,7 +276,7 @@ struct HomeView: View {
                     .buttonStyle(PillButtonStyle(color: inlinePaused ? .green : .orange))
 
                     Button {
-                        inlineExerciseID = nil
+                        stopInlineTimer()
                     } label: {
                         Label("Stop", systemImage: "stop.fill")
                     }
@@ -319,12 +310,7 @@ struct HomeView: View {
                 }
 
                 Button {
-                    inlineExerciseID = exercise.persistentModelID
-                    inlineSetDuration = exercise.effectiveDurationSeconds
-                    inlineSeconds = exercise.effectiveDurationSeconds
-                    inlineSet = 1
-                    inlineTotalSets = exercise.sets
-                    inlinePaused = false
+                    startInlineTimer(for: exercise)
                 } label: {
                     Label("Start", systemImage: "play.fill")
                 }
@@ -513,6 +499,67 @@ struct HomeView: View {
 
         exerciseSessionService.startSession(with: exercises, audioService: audioService, manualExerciseStart: routine.manualExerciseStart)
         showExerciseSession = true
+    }
+
+    // MARK: - Inline exercise timer
+
+    private func startInlineTimer(for exercise: Exercise) {
+        inlineExerciseID = exercise.persistentModelID
+        inlineSetDuration = exercise.effectiveDurationSeconds
+        inlineSeconds = exercise.effectiveDurationSeconds
+        inlineSet = 1
+        inlineTotalSets = exercise.sets
+        inlinePaused = false
+        inlineSetEndDate = Date().addingTimeInterval(Double(inlineSetDuration))
+    }
+
+    private func stopInlineTimer() {
+        inlineExerciseID = nil
+        inlineSetEndDate = nil
+        inlinePaused = false
+    }
+
+    private func toggleInlinePause() {
+        inlinePaused.toggle()
+        if inlinePaused {
+            inlineSetEndDate = nil
+        } else {
+            inlineSetEndDate = Date().addingTimeInterval(Double(inlineSeconds))
+        }
+    }
+
+    private func tickInlineTimer() {
+        guard inlineExerciseID != nil, !inlinePaused, let endDate = inlineSetEndDate else { return }
+        let remaining = Int(endDate.timeIntervalSinceNow.rounded(.up))
+        if remaining > 0 {
+            if remaining != inlineSeconds { inlineSeconds = remaining }
+            return
+        }
+        // Current set finished — advance or stop.
+        if inlineSet < inlineTotalSets {
+            inlineSet += 1
+            inlineSeconds = inlineSetDuration
+            inlineSetEndDate = Date().addingTimeInterval(Double(inlineSetDuration))
+        } else {
+            stopInlineTimer()
+        }
+    }
+
+    // MARK: - Idle timer
+
+    private var shouldKeepScreenOn: Bool {
+        let timerActive = timerService.state == .running || timerService.state == .exerciseTime
+        let sessionActive: Bool
+        switch exerciseSessionService.state {
+        case .preparing, .running, .paused, .waitingToStart: sessionActive = true
+        case .idle, .completed: sessionActive = false
+        }
+        let inlineActive = inlineExerciseID != nil
+        return timerActive || sessionActive || inlineActive
+    }
+
+    private func applyIdleTimerState() {
+        UIApplication.shared.isIdleTimerDisabled = shouldKeepScreenOn
     }
 
     // MARK: - Background timer notifications
